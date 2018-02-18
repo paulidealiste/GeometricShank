@@ -4,3 +4,11 @@
 @import '../../node_modules/uikit/src/scss/mixins-theme.scss';
 
 @import "../../node_modules/uikit/src/scss/uikit-theme.scss";
+
+textarea {
+  resize: none;
+}
+
+.geometric-shank-navbar {
+  border-bottom: $navbar-border-bottom;
+}

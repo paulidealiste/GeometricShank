@@ -1,9 +1,11 @@
 import GeometricShankToolbar from './GeometricShankToolbar.component';
+import GeometricShankWindow from './GeometricShankWindow.component';
+const electron = window.require("electron");
 
 export default ({
   template: `
-  <div>
-    <nav class="uk-navbar-container" uk-navbar>
+  <div class="uk-flex uk-flex-column uk-height-viewport">
+    <nav class="uk-navbar-container geometric-shank-navbar" uk-navbar>
       <div class="uk-navbar-left">
           <ul class="uk-navbar-nav">
             <li class="uk-active">
@@ -17,10 +19,21 @@ export default ({
           </ul>
       </div>
     </nav>
-    <geometric-shank-toolbar></geometric-shank-toolbar>
+    <div class="uk-flex">
+      <geometric-shank-toolbar v-on:nex="newRandomExcrept"></geometric-shank-toolbar>
+    </div>
+    <div class="uk-flex uk-flex-1">
+      <geometric-shank-window ref="gsw"></geometric-shank-window>
+    </div>
   </div>
   `,
+  methods: {
+    newRandomExcrept: function() {
+      this.$refs.gsw.newRandomExcrept();
+    },
+  },
   components: {
-    'geometric-shank-toolbar': GeometricShankToolbar
+    'geometric-shank-toolbar': GeometricShankToolbar,
+    'geometric-shank-window': GeometricShankWindow
   }
 })
