@@ -12,3 +12,16 @@ textarea {
 .geometric-shank-navbar {
   border-bottom: $navbar-border-bottom;
 }
+
+::-webkit-scrollbar {
+  width: $scrollbar-width;
+  height: $scrollbar-height;
+}
+
+::-webkit-scrollbar-track {
+  background: lightgrey;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $global-primary-background;
+}

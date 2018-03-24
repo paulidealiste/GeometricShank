@@ -1,17 +1,12 @@
 const R = require('ramda');
 
 const getRandomBounds = (array) => {
-  let a = 1;
-  let b = 1;
-  while (a == b) {
+  let a, b;
+  while (b == null || b >= array.length) {
     a = Math.floor(array.length * Math.random());
-    b = Math.floor(array.length * Math.random());
+    b = a + Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
   }
-  if (a > b) {
-    return [array[b], array[a]];
-  } else {
-    return [array[a], array[b]];
-  }
+  return [array[a], array[b]];
 };
 const mapIndexed = R.addIndex(R.map);
 const characterifyString = (s) => s.split("");

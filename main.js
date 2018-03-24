@@ -36,6 +36,6 @@ ipcMain.on('reachForExcrept', (event, arg) => {
   fs.readFile('./src/assets/4280-0.txt', 'utf8', function(err, data) {
     if (err) throw err;
     let ri = H.randomIndices(data);
-    event.sender.send('excreptReached', data.substr(ri[0], ri[1]));
+    event.sender.send('excreptReached', data.substr(ri[0], ri[1]-ri[0]));
   });
 });
