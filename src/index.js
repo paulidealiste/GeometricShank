@@ -1,6 +1,7 @@
 import './stylesheets/main.scss';
-import UIkit from 'uikit';
-import Icons from 'uikit/dist/js/uikit-icons';
+import * as UIkit from 'uikit';
+import * as Icons from 'uikit/dist/js/uikit-icons.js'
+
 UIkit.use(Icons);
 
 import Vue from 'vue';
