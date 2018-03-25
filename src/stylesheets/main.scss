@@ -5,6 +5,10 @@
 
 @import "../../node_modules/uikit/src/scss/uikit-theme.scss";
 
+html {
+  font-family: 'Inconsolata', monospace
+}
+
 textarea {
   resize: none;
 }

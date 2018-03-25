@@ -7,7 +7,7 @@ const { spawn } = require('child_process');
 module.exports = merge(common, {
   entry: {
     app: './src/index.js',
-    vendor: ['vue', '@fortawesome/fontawesome-free-solid', '@fortawesome/vue-fontawesome']
+    vendor: ['vue']
   },
   devtool: 'source-map',
   devServer: {

@@ -1,3 +1,4 @@
+import '../assets/fonts/Inconsolata.scss';
 import './stylesheets/main.scss';
 import * as UIkit from 'uikit';
 import * as Icons from 'uikit/dist/js/uikit-icons.js'
