@@ -18,6 +18,11 @@ textarea {
   border-bottom: $navbar-border-bottom;
 }
 
+.geometric-shank-canvas-line {
+  color: $card-default-color;
+}
+
+
 ::-webkit-scrollbar {
   width: $scrollbar-width;
   height: $scrollbar-height;

@@ -13,17 +13,17 @@ export default ({
               :size="66"
               :color="'#008080'"
             ></trinity-rings-spinner>
-            <textarea v-model="workingExcrept" class="uk-textarea"></textarea>
+            <textarea v-model="workingExcrept" class="uk-textarea" ref="wet"></textarea>
           </form>
         </div>
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
-        <div class="uk-card uk-card-primary uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-overflow-auto uk-padding-small">
-          <geometric-shank-canvas v-bind:computed-excrept="computedExcrept"></geometric-shank-canvas>
+        <div class="uk-card uk-card-primary uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-overflow-auto uk-padding-remove">
+          <geometric-shank-canvas v-bind:computed-excrept="computedExcrept" ref="gsc"></geometric-shank-canvas>
         </div>
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
-        <div class="uk-card uk-card-default uk-card-body uk-width-1-1 uk-flex uk-flex-1">
+        <div class="uk-card uk-card-default uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-padding-remove">
           <p class="uk-text-small uk-position-cover uk-padding-small">Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         </div>
       </div>
@@ -47,6 +47,9 @@ export default ({
   },
   computed: {
     computedExcrept: function() {
+      this.$nextTick(function () {
+        this.$refs.gsc.calculateWrap(this.$refs.wet.clientWidth - 20);
+      });
       return this.workingExcrept;
     }
   },
