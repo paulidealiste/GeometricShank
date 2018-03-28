@@ -2,23 +2,26 @@ import * as R from 'ramda';
 
 export default {
     methods: {
-        getTextWidth(context, text, font) {
-            if (context != null) {
-                let metrics = context.measureText(text != null ? text : "M");
-                return metrics.width;
-            } else {
-                return 0;
-            }
+        getCharWidth(font, char) {
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext('2d');
+            ctx.font = window.getComputedStyle(this.$el).font;
+            let metrics = ctx.measureText(char != null ? char : "M");
+            return metrics.width;
         },
         getLineHeight(HTMLElement) {
             return parseInt(window.getComputedStyle(HTMLElement).lineHeight.replace('px', ''))
+        },
+        getRandomID() {
+            return Math.random().toString(36).substring(7);
         },
         computeTextWrap(text, charWidth, lineLength) {
             let wraped = [];
             let words = text.split(' ');
             let temp = '';
             R.forEach((w) => {
-                if (temp.length * charWidth >= lineLength) {
+                if (temp.length * charWidth > lineLength) {
+                    temp += ' ' + w;
                     wraped = R.append(temp.trim(), wraped);
                     temp = '';
                 } else {

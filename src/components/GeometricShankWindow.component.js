@@ -1,6 +1,6 @@
 const electron = window.require("electron");
 import Vue from 'vue';
-import GeometricShankCanvas from './GeometricShankCanvas.component';
+import GeometricShankSvg from './GeometricShankSvg.component';
 
 export default ({
   template: `
@@ -19,7 +19,7 @@ export default ({
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
         <div class="uk-card uk-card-primary uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-overflow-auto uk-padding-remove">
-          <geometric-shank-canvas v-bind:computed-excrept="computedExcrept" ref="gsc"></geometric-shank-canvas>
+          <geometric-shank-svg v-bind:computed-excrept="computedExcrept" ref="gsc"></geometric-shank-svg>
         </div>
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
@@ -48,12 +48,12 @@ export default ({
   computed: {
     computedExcrept: function() {
       this.$nextTick(function () {
-        this.$refs.gsc.calculateWrap(this.$refs.wet.clientWidth - 20);
+        this.$refs.gsc.render(this.$refs.wet.clientWidth - 20);
       });
       return this.workingExcrept;
     }
   },
   components: {
-    'geometric-shank-canvas': GeometricShankCanvas
+    'geometric-shank-svg': GeometricShankSvg
   }
 })
