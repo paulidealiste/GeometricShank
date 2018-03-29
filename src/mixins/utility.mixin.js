@@ -29,6 +29,22 @@ export default {
                 }
             }, words);
             return wraped;
+        },
+        getClickedWord(line, mouseX, lineWidth) {
+            let chw = lineWidth / line.length;
+            let words = line.split(' ');
+            let chap = (a, b) => [a + b, a + b];
+            let largerThanOrEqualTo = (str) => (str.length - 1) * chw <= mouseX;
+            let isLetter = (c) => c.toLowerCase() != c.toUpperCase(); 
+            let maped = R.mapAccum(chap, '', line.split(''));
+            let po = R.takeWhile(largerThanOrEqualTo, maped[1]);
+            if (isLetter(R.last(R.last(po)))) {
+                let foundIndex = R.last(po).split(' ').length - 1;
+                let foundWord = words[foundIndex < 0 ? 0 : foundIndex].replace(/\W/g, '');
+                return foundWord;
+            } else {
+                return R.last(R.last(po));
+            }
         }
     }
 }

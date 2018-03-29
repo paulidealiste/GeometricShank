@@ -63,10 +63,13 @@ export default {
                 .attr('class', 'excreptLine noselect')
                 .attr('x', 0)
                 .attr('y', (d, i) => {
-                    console.log(d);
                     return (i + 1) * this.properties.lineHeight
                 })
-                .text((d) => { return d });
+                .text((d) => { return d })
+                .on('click', (d, i, k) => {
+                    let word = this.getClickedWord(d, d3.mouse(k[i])[0], d3.select(k[i]).node().getBBox().width);
+                    this.$emit('clickedWord', word);
+                });
             //Update
             this.selections.textLines
                 .merge(this.selections.textLines);

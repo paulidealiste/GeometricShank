@@ -1,6 +1,7 @@
 const electron = window.require("electron");
 import Vue from 'vue';
 import GeometricShankSvg from './GeometricShankSvg.component';
+import * as R from 'ramda';
 
 export default ({
   template: `
@@ -19,12 +20,14 @@ export default ({
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
         <div class="uk-card uk-card-primary uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-overflow-auto uk-padding-remove">
-          <geometric-shank-svg v-bind:computed-excrept="computedExcrept" ref="gsc"></geometric-shank-svg>
+          <geometric-shank-svg v-bind:computed-excrept="computedExcrept" ref="gsc" v-on:clickedWord="addClickedWord"></geometric-shank-svg>
         </div>
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
         <div class="uk-card uk-card-default uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-padding-remove">
-          <p class="uk-text-small uk-position-cover uk-padding-small">Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p class="uk-text-small uk-position-cover uk-padding-small">
+            {{ cutupExcrept }}
+          </p>
         </div>
       </div>
     </div>
@@ -32,6 +35,7 @@ export default ({
   data: function() {
     return {
       workingExcrept: '',
+      cutupExcrept: '',
       loading: false
     };
   },
@@ -43,6 +47,17 @@ export default ({
         this.workingExcrept = arg.replace(/[\r\n]/g, ' ').trim();
         this.loading = false;
       });
+    },
+    addClickedWord: function(word) {
+      let isLetter = (c) => c.toLowerCase() != c.toUpperCase(); 
+      if (R.last(this.cutupExcrept) != ' ' && isLetter(word[0])) {
+        this.cutupExcrept += ' ' + word;
+      } else {
+        this.cutupExcrept += word;
+      }
+    },
+    clearCutupExcrept: function() {
+      this.cutupExcrept = '';
     }
   },
   computed: {
