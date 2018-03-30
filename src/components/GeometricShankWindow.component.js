@@ -56,6 +56,9 @@ export default ({
         this.cutupExcrept += word;
       }
     },
+    cutTextGeometrically: function() {
+      this.$refs.gsc.cutTextGeometrically();
+    },
     clearCutupExcrept: function() {
       this.cutupExcrept = '';
     }

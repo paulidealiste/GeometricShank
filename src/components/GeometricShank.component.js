@@ -20,7 +20,7 @@ export default ({
       </div>
     </nav>
     <div class="uk-flex">
-      <geometric-shank-toolbar v-on:nex="newRandomExcrept" v-on:cal="clearCutupExcrept"></geometric-shank-toolbar>
+      <geometric-shank-toolbar v-on:nex="newRandomExcrept" v-on:cal="clearCutupExcrept" v-on:ctg="cutTextGeometrically"></geometric-shank-toolbar>
     </div>
     <div class="uk-flex uk-flex-1">
       <geometric-shank-window ref="gsw"></geometric-shank-window>
@@ -30,6 +30,9 @@ export default ({
   methods: {
     newRandomExcrept: function() {
       this.$refs.gsw.newRandomExcrept();
+    },
+    cutTextGeometrically: function() {
+      this.$refs.gsw.cutTextGeometrically();
     },
     clearCutupExcrept: function() {
       this.$refs.gsw.clearCutupExcrept();

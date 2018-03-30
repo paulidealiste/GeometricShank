@@ -2,6 +2,8 @@ import Vue from 'vue';
 import UtilityMixin from '../mixins/utility.mixin';
 import * as R from 'ramda';
 import * as d3 from 'd3';
+import { GeometricShankCutLines } from './svg-elements/GeometricShankCutLines.svg'
+import { GeometricShankText } from './svg-elements/GeometricShankText.svg';
 
 export default {
     template: `
@@ -17,9 +19,7 @@ export default {
             selections: {
                 baseSvg: null,
                 svg: null,
-                body: null,
-                textContainer: null,
-                textLines: null
+                body: null
             },
             properties: {
                 width: null,
@@ -27,6 +27,10 @@ export default {
                 charWidth: null,
                 lineHeight: null,
                 clipID: null
+            },
+            elements: {
+                gsln: null,
+                gstx: null
             },
             heightPadding: 30,
             widthPadding: 10
@@ -36,10 +40,11 @@ export default {
         render: function (textBoxWidth) {
             this.wrapedExcrept = this.computeTextWrap(this.computedExcrept, this.properties.charWidth, textBoxWidth);
             this.structure();
-            this.bind();
+            this.elements.gstx = new GeometricShankText(this.selections, this.properties);
+            this.elements.gstx.bindDataAndRender(this.wrapedExcrept, this.wordCharClicked, this.getClicked);
+            this.elements.gsln = new GeometricShankCutLines(this.selections, this.properties, this.elements.gstx.selections);
         },
         structure: function () {
-            let custom = document.createElement('custom');
             if (this.selections.svg != null) this.selections.svg.remove();
             this.selections.svg = this.selections.baseSvg
                 .append('g');
@@ -56,29 +61,18 @@ export default {
                 .attr('width', this.properties.width)
                 .attr('height', this.properties.height);
         },
-        bind: function () {
-            this.selections.textLines = this.selections.svg.selectAll('text.excreptLine').data(this.wrapedExcrept)
-                .enter()
-                .append('text')
-                .attr('class', 'excreptLine noselect')
-                .attr('x', 0)
-                .attr('y', (d, i) => {
-                    return (i + 1) * this.properties.lineHeight
-                })
-                .text((d) => { return d })
-                .on('click', (d, i, k) => {
-                    let word = this.getClickedWord(d, d3.mouse(k[i])[0], d3.select(k[i]).node().getBBox().width);
-                    this.$emit('clickedWord', word);
-                });
-            //Update
-            this.selections.textLines
-                .merge(this.selections.textLines);
-            //Exit
-            let exit = this.selections.textLines.exit().remove();
+        getClicked: function(line, mouseX, lineWidth) {
+            return this.getClickedWord(line, mouseX, lineWidth);
+        },
+        wordCharClicked: function(word) {
+            this.$emit('clickedWord', word);
         },
         setHW: function () {
             this.properties.height = this.$el.clientHeight - this.heightPadding;
             this.properties.width = this.$el.clientWidth - this.widthPadding;
+        },
+        cutTextGeometrically: function() {
+            this.elements.gsln.drawCrossCut();
         }
     },
     mounted: function () {
