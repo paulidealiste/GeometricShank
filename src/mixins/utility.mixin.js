@@ -35,7 +35,7 @@ export default {
             let words = line.split(' ');
             let chap = (a, b) => [a + b, a + b];
             let largerThanOrEqualTo = (str) => (str.length - 1) * chw <= mouseX;
-            let isLetter = (c) => c.toLowerCase() != c.toUpperCase(); 
+            let isLetter = (c) => c.toLowerCase() != c.toUpperCase();
             let maped = R.mapAccum(chap, '', line.split(''));
             let po = R.takeWhile(largerThanOrEqualTo, maped[1]);
             if (isLetter(R.last(R.last(po)))) {
@@ -45,6 +45,15 @@ export default {
             } else {
                 return R.last(R.last(po));
             }
+        },
+        getAllWordsOnCutUpLines(cutPositions) {
+            let words = [];
+            for (let i = 0; i < cutPositions.lines.length; i++) {
+                let culine = cutPositions.lines[i];
+                let cuveccut = cutPositions.verticalCut[i];
+                words.push(this.getClickedWord(culine.lineText, cuveccut.x, culine.lineWidth));
+            }
+            return words;
         }
     }
 }

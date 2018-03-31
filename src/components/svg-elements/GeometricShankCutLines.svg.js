@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as d3 from 'd3';
 
 export function GeometricShankCutLines(baseSelections, baseProperties, textLineSelections) {
     this.selections = {
@@ -10,21 +10,29 @@ export function GeometricShankCutLines(baseSelections, baseProperties, textLineS
     this.baseProperties = baseProperties;
     this.textLineSelections = textLineSelections;
     this.cutLinesData = null;
-    this.properties = {
-        icw: null
-    }
+    this.cutPositions = {
+        verticalCut: [],
+        horizontalCut: [],
+        lines: []
+    };
+    this.callbacks = {
+        getAllWordsOnCutUpLines: null
+    };
 }
 
 GeometricShankCutLines.prototype = Object.create(GeometricShankCutLines.prototype);
 GeometricShankCutLines.prototype.constructor = GeometricShankCutLines;
 
-GeometricShankCutLines.prototype.drawCrossCut = function () {
+GeometricShankCutLines.prototype.drawCrossCut = function (getAllWordsOnCutUpLines) {
     var _this = this;
+    _this.callbacks.getAllWordsOnCutUpLines = getAllWordsOnCutUpLines;
     _this.selections.cutLinesContainer = _this.selections.baseSelections.svg
         .append('g')
         .attr('class', 'cutLinesContainer');
     _this.drawCutLines();
     _this.drawAuxCutLines();
+    _this.calculateCutPositions();
+    _this.callbacks.getAllWordsOnCutUpLines(_this.cutPositions);
 };
 
 GeometricShankCutLines.prototype.drawCutLines = function () {
@@ -56,22 +64,22 @@ GeometricShankCutLines.prototype.drawCutLines = function () {
 
 GeometricShankCutLines.prototype.drawAuxCutLines = function () {
     var _this = this;
-    let lineDef = {
-        x1: 0,
-        y1: _this.baseProperties.lineHeight,
-        x2: _this.baseProperties.width,
-        y2: _this.baseProperties.lineHeight
-    };
-    let allAuxLines = R.repeat(lineDef, _this.textLineSelections.textLines.enter().data().length);
-    let mapIndexed = R.addIndex(R.map);
-    let mapToLineHeight = (ld, idx) => {
-        let l = R.clone(ld);
-        l.y2 *= idx + 1;
-        l.y1 *= idx + 1;
-        return l;
-    }
-    allAuxLines = mapIndexed(mapToLineHeight, allAuxLines);
-    _this.selections.auxCutLines = _this.selections.cutLinesContainer.selectAll('line.cutLine').data(allAuxLines);
+    _this.cutPositions.lines = [];
+
+    _this.textLineSelections.textLinesContainer.selectAll('text').each(function(d, i, k) {
+        let cutext = d3.select(k[i]);
+        let lineDef = {
+            x1: 0,
+            y1: parseFloat(cutext.attr('y')),
+            x2: _this.baseProperties.width,
+            y2: parseFloat(cutext.attr('y')),
+            lineWidth: cutext.node().getBBox().width,
+            lineText: d
+        };
+        _this.cutPositions.lines.push(lineDef);
+     });
+
+    _this.selections.auxCutLines = _this.selections.cutLinesContainer.selectAll('line.cutLine').data(_this.cutPositions.lines);
     _this.selections.auxCutLines
         .enter()
         .append('line')
@@ -83,4 +91,39 @@ GeometricShankCutLines.prototype.drawAuxCutLines = function () {
     _this.selections.auxCutLines
         .merge(_this.selections.cutLines);
     _this.selections.auxCutLines.exit().remove();
+};
+
+GeometricShankCutLines.prototype.calculateCutPositions = function () {
+    var _this = this;
+    _this.cutPositions.horizontalCut = [];
+    _this.cutPositions.verticalCut = [];
+    _this.selections.cutLines.enter().each(function (d) {
+        if (d.y1 == d.y2) {
+            _this.cutPositions.horizontalCut.push(d);
+        } else {
+            _this.selections.auxCutLines.enter().each(function (e) {
+                let inter = _this.calculateIntersection(d, e);
+                _this.cutPositions.verticalCut.push(inter);
+            });
+        }
+    });
+}
+
+GeometricShankCutLines.prototype.calculateIntersection = function (l1, l2) {
+    let a1 = l1.y2 - l1.y1;
+    let b1 = l1.x1 - l1.x2;
+    let c1 = a1 * l1.x1 + b1 * l1.y1;
+
+    let a2 = l2.y2 - l2.y1;
+    let b2 = l2.x1 - l2.x2;
+    let c2 = a2 * l2.x1 + b2 * l2.y1;
+
+    let determinant = a1 * b2 - a2 * b1;
+    let xi = (b2 * c1 - b1 * c2) / determinant;
+    let yi = (a1 * c2 - a2 * c1) / determinant;
+
+    return {
+        x: xi,
+        y: yi
+    }
 };

@@ -61,19 +61,22 @@ export default {
                 .attr('width', this.properties.width)
                 .attr('height', this.properties.height);
         },
-        getClicked: function(line, mouseX, lineWidth) {
+        getClicked: function (line, mouseX, lineWidth) {
             return this.getClickedWord(line, mouseX, lineWidth);
         },
-        wordCharClicked: function(word) {
-            this.$emit('clickedWord', word);
+        wordCharClicked: function (word) {
+            this.$emit('sendCutupString', word);
+        },
+        cutTextGeometrically: function () {
+            this.elements.gsln.drawCrossCut(this.wordsOnCutUpLines);
+        },
+        wordsOnCutUpLines: function (cutPositions) {
+            this.$emit('sendCutupString', this.getAllWordsOnCutUpLines(cutPositions).join(' '));
         },
         setHW: function () {
             this.properties.height = this.$el.clientHeight - this.heightPadding;
             this.properties.width = this.$el.clientWidth - this.widthPadding;
         },
-        cutTextGeometrically: function() {
-            this.elements.gsln.drawCrossCut();
-        }
     },
     mounted: function () {
         this.setHW();
