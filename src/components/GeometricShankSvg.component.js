@@ -16,6 +16,7 @@ export default {
         return {
             wrapedExcrept: [],
             ctx: null,
+            cutPositions: null,
             selections: {
                 baseSvg: null,
                 svg: null,
@@ -71,7 +72,12 @@ export default {
             this.elements.gsln.drawCrossCut(this.wordsOnCutUpLines);
         },
         wordsOnCutUpLines: function (cutPositions) {
-            this.$emit('sendCutupString', this.getAllWordsOnCutUpLines(cutPositions).join(' '));
+            this.cutPositions = cutPositions;
+            this.$emit('sendCutupString', this.getAllWordsOnCutUpLines(this.cutPositions).join(' '));
+        },
+        pasteCutUpSegments: function() {
+            this.$emit('clearCutupExcrept');
+            this.$emit('sendCutupString', this.getCutUpSegments(this.cutPositions).join(' '));
         },
         setHW: function () {
             this.properties.height = this.$el.clientHeight - this.heightPadding;

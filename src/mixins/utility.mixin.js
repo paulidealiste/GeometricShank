@@ -15,6 +15,16 @@ export default {
         getRandomID() {
             return Math.random().toString(36).substring(7);
         },
+        shuffleArray(array) {
+            var m = array.length, t, i;
+            while (m) {
+                i = Math.floor(Math.random() * m--);
+                t = array[m];
+                array[m] = array[i];
+                array[i] = t;
+            }
+            return array;
+        },
         computeTextWrap(text, charWidth, lineLength) {
             let wraped = [];
             let words = text.split(' ');
@@ -54,6 +64,16 @@ export default {
                 words.push(this.getClickedWord(culine.lineText, cuveccut.x, culine.lineWidth));
             }
             return words;
+        },
+        getCutUpSegments(cutPositions) {
+            const horizontalSeparate = R.curry((list, hob) => {
+                let hind = (y1, y2) => y1 == y2;
+                let index = R.findIndex((line) => line.y1 >= hob.y1 && line.y2 >= hob.y2, cutPositions.lines);
+                return R.splitAt(index, cutPositions.lines);
+            });
+            const separated = horizontalSeparate(cutPositions.lines);
+            let horizontalSegments = R.map((hc) => separated(hc), cutPositions.horizontalCut);
+            return R.pluck('lineText', R.flatten(this.shuffleArray(horizontalSegments[0])));
         }
     }
 }

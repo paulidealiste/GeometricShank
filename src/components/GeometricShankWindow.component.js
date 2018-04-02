@@ -20,7 +20,7 @@ export default ({
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
         <div class="uk-card uk-card-primary uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-overflow-auto uk-padding-remove">
-          <geometric-shank-svg v-bind:computed-excrept="computedExcrept" ref="gsc" v-on:sendCutupString="addCutupString"></geometric-shank-svg>
+          <geometric-shank-svg v-bind:computed-excrept="computedExcrept" ref="gsc" v-on:sendCutupString="addCutupString" v-on:clearCutupExcrept="clearCutupExcrept"></geometric-shank-svg>
         </div>
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
@@ -59,6 +59,9 @@ export default ({
     },
     cutTextGeometrically: function() {
       this.$refs.gsc.cutTextGeometrically();
+    },
+    pasteCutUpSegments: function() {
+      this.$refs.gsc.pasteCutUpSegments();
     },
     clearCutupExcrept: function() {
       this.cutupExcrept = '';
