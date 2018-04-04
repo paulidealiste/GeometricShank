@@ -13,7 +13,8 @@ export function GeometricShankCutLines(baseSelections, baseProperties, textLineS
     this.cutPositions = {
         verticalCut: [],
         horizontalCut: [],
-        lines: []
+        lines: [],
+        fieldNumber: 0
     };
     this.callbacks = {
         getAllWordsOnCutUpLines: null
@@ -97,6 +98,7 @@ GeometricShankCutLines.prototype.calculateCutPositions = function () {
     var _this = this;
     _this.cutPositions.horizontalCut = [];
     _this.cutPositions.verticalCut = [];
+    _this.cutPositions.fieldNumber = _this.selections.cutLines.enter().nodes().length * _this.selections.cutLines.enter().nodes().length;
     _this.selections.cutLines.enter().each(function (d) {
         if (d.y1 == d.y2) {
             _this.cutPositions.horizontalCut.push(d);

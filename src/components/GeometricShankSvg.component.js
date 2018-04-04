@@ -63,7 +63,7 @@ export default {
                 .attr('height', this.properties.height);
         },
         getClicked: function (line, mouseX, lineWidth) {
-            return this.getClickedWord(line, mouseX, lineWidth);
+            return this.getClickedWord(line, mouseX, lineWidth).word;
         },
         wordCharClicked: function (word) {
             this.$emit('sendCutupString', word);

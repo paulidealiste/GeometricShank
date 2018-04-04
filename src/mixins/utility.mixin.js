@@ -48,12 +48,20 @@ export default {
             let isLetter = (c) => c.toLowerCase() != c.toUpperCase();
             let maped = R.mapAccum(chap, '', line.split(''));
             let po = R.takeWhile(largerThanOrEqualTo, maped[1]);
+            let foundIndex = R.last(po).split(' ').length - 1;
             if (isLetter(R.last(R.last(po)))) {
-                let foundIndex = R.last(po).split(' ').length - 1;
                 let foundWord = words[foundIndex < 0 ? 0 : foundIndex].replace(/\W/g, '');
-                return foundWord;
+                return {
+                    foundIndex: foundIndex,
+                    foundLength: foundIndex * chw,
+                    foundWord: foundWord
+                };
             } else {
-                return R.last(R.last(po));
+                return {
+                    foundIndex: foundIndex,
+                    foundLength: foundIndex * chw,
+                    foundWord: R.last(R.last(po))
+                };
             }
         },
         getAllWordsOnCutUpLines(cutPositions) {
@@ -61,19 +69,40 @@ export default {
             for (let i = 0; i < cutPositions.lines.length; i++) {
                 let culine = cutPositions.lines[i];
                 let cuveccut = cutPositions.verticalCut[i];
-                words.push(this.getClickedWord(culine.lineText, cuveccut.x, culine.lineWidth));
+                words.push(this.getClickedWord(culine.lineText, cuveccut.x, culine.lineWidth).foundWord);
             }
             return words;
         },
         getCutUpSegments(cutPositions) {
-            const horizontalSeparate = R.curry((list, hob) => {
-                let hind = (y1, y2) => y1 == y2;
-                let index = R.findIndex((line) => line.y1 >= hob.y1 && line.y2 >= hob.y2, cutPositions.lines);
-                return R.splitAt(index, cutPositions.lines);
-            });
-            const separated = horizontalSeparate(cutPositions.lines);
-            let horizontalSegments = R.map((hc) => separated(hc), cutPositions.horizontalCut);
-            return R.pluck('lineText', R.flatten(this.shuffleArray(horizontalSegments[0])));
+            const verticalSeparate = (line, vob) => {
+                let index = this.getClickedWord(line.lineText, vob.x, line.lineWidth).foundLength;
+                let splitLine = R.splitAt(index, line.lineText);
+                line.lineText = splitLine;
+                return line;
+            };
+            const horizontalSeparate = (cutLines, hob) => {
+                let index = R.findIndex((line) => line.y1 >= hob.y1 && line.y2 >= hob.y2, cutLines);
+                return R.splitAt(index, list);
+            };
+
+            let verticalCutup = [];
+            let horizontalCutup = [];
+            for (let i = 0; i < cutPositions.lines.length; i++) {
+                let culine = cutPositions.lines[i];
+                let cuveccut = cutPositions.verticalCut[i];
+                verticalCutup.push(verticalSeparate(culine, cuveccut));
+            }
+            for (let j = 0; j < cutPositions.horizontalCut.length; j++) {
+                let hob = cutPositions.horizontalCut[j];
+                let index = R.findIndex((line) => line.y1 >= hob.y1 && line.y2 >= hob.y2, verticalCutup);
+                horizontalCutup.push(R.take(index, verticalCutup));
+                verticalCutup = R.drop(index, verticalCutup);
+            }
+            horizontalCutup.push(verticalCutup);
+
+            console.log(horizontalCutup);
+
+            return ['', ''];
         }
     }
 }
