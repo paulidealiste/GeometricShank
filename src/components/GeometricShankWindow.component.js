@@ -25,8 +25,7 @@ export default ({
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
         <div class="uk-card uk-card-default uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-padding-remove uk-overflow-auto uk-position-relative">
-          <p class="uk-text-small uk-position-cover uk-padding-small">
-            {{ cutupExcrept }}
+          <p class="uk-text-small uk-position-cover uk-padding-small" v-html="cutupExcrept">
           </p>
         </div>
       </div>

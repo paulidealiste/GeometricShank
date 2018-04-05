@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import * as R from 'ramda';
 
 export function GeometricShankCutLines(baseSelections, baseProperties, textLineSelections) {
     this.selections = {
@@ -14,11 +15,13 @@ export function GeometricShankCutLines(baseSelections, baseProperties, textLineS
         verticalCut: [],
         horizontalCut: [],
         lines: [],
-        fieldNumber: 0
+        fieldNumber: 0,
+        fieldColors: []
     };
     this.callbacks = {
         getAllWordsOnCutUpLines: null
     };
+    this.segmentPalette = ['#1693A5', '#ADD8C7', '#FBB829', '#FF0066', '#556270', '#ff6666', '#ff8080', '#fbbb29', '#ff9900', '#ff7a22', '#1693a5', '#036564'];
 }
 
 GeometricShankCutLines.prototype = Object.create(GeometricShankCutLines.prototype);
@@ -99,6 +102,7 @@ GeometricShankCutLines.prototype.calculateCutPositions = function () {
     _this.cutPositions.horizontalCut = [];
     _this.cutPositions.verticalCut = [];
     _this.cutPositions.fieldNumber = _this.selections.cutLines.enter().nodes().length * _this.selections.cutLines.enter().nodes().length;
+    _this.cutPositions.fieldColors = R.take(_this.cutPositions.fieldNumber, _this.segmentPalette);
     _this.selections.cutLines.enter().each(function (d) {
         if (d.y1 == d.y2) {
             _this.cutPositions.horizontalCut.push(d);

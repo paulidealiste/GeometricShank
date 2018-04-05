@@ -77,7 +77,8 @@ export default {
         },
         pasteCutUpSegments: function() {
             this.$emit('clearCutupExcrept');
-            this.$emit('sendCutupString', this.getCutUpSegments(this.cutPositions).join(' '));
+            let completeCutup = this.getCutUpSegments(this.cutPositions);
+            this.$emit('sendCutupString', this.packCutupSegments(completeCutup, this.cutPositions.fieldColors));
         },
         setHW: function () {
             this.properties.height = this.$el.clientHeight - this.heightPadding;

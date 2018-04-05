@@ -75,9 +75,10 @@ export default {
         },
         getCutUpSegments(cutPositions) {
             const verticalSeparate = (line, vob) => {
-                let index = this.getClickedWord(line.lineText, vob.x, line.lineWidth).foundLength;
-                let splitLine = R.splitAt(index, line.lineText);
-                line.lineText = splitLine;
+                let index = this.getClickedWord(line.lineText, vob.x, line.lineWidth).foundIndex;
+                let splitWords = R.split(' ', line.lineText);
+                let splitLines = R.splitAt(index, splitWords); 
+                line.lineText = R.map((sl) => sl.join(' '), splitLines);
                 return line;
             };
             const horizontalSeparate = (cutLines, hob) => {
@@ -99,10 +100,34 @@ export default {
                 verticalCutup = R.drop(index, verticalCutup);
             }
             horizontalCutup.push(verticalCutup);
+            return horizontalCutup;
+        },
+        packCutupSegments(completeCutupLines, cutupColors) {
+            let completeCutupSegments = [];
+            let arrayColumn = (array, n) => R.map(x => x[n], array);
+            for (let i = 0; i < completeCutupLines.length; i++) {
+                let lines = completeCutupLines[i];
+                let aml = R.pluck('lineText', lines);
+                let sampleVerticalCutsLen = aml[0].length;
+                for (let j = 0; j < sampleVerticalCutsLen; j++) {
+                    completeCutupSegments.push(arrayColumn(aml, j));
+                }
+            }
+            // completeCutupSegments = this.shuffleArray(completeCutupSegments);
 
-            console.log(horizontalCutup);
+            let completeCutupHTML = '';
+            for (let i = 0; i < cutupColors.length; i++) {
+                let col = cutupColors[i];
+                let seg = completeCutupSegments[i];
+                console.log(col);
+                console.log(seg);
+                let segString = '<span style="color: ' + col + '">' + seg + '</span>';
+                completeCutupHTML += ' ' + segString;
+            }
 
-            return ['', ''];
+            console.log(completeCutupHTML);
+
+            return completeCutupHTML;
         }
     }
 }
