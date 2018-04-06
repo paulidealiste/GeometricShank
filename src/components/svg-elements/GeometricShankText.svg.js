@@ -38,6 +38,7 @@ GeometricShankText.prototype.renderTextLines = function (data) {
         .attr('y', (d, i) => {
             return (i + 1) * _this.baseProperties.lineHeight
         })
+        .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
         .text((d) => { return d })
         .on('click', (d, i, k) => {
             let word = _this.callbacks.getClickedWord(d, d3.mouse(k[i])[0], d3.select(k[i]).node().getBBox().width);

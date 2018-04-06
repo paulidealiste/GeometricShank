@@ -29,6 +29,25 @@ textarea {
   cursor: default;
 }
 
+.textDimensionCalculation {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+  white-space: nowrap;
+  font-family: 'Inconsolata', monospace;
+}
+
+.lineBreakerCalculation {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  border: none;
+  font-family: 'Inconsolata', monospace;
+}
+
 .geometric-shank-navbar {
   border-bottom: $navbar-border-bottom;
 }

@@ -30,6 +30,7 @@ GeometricShankCutLines.prototype.constructor = GeometricShankCutLines;
 GeometricShankCutLines.prototype.drawCrossCut = function (getAllWordsOnCutUpLines) {
     var _this = this;
     _this.callbacks.getAllWordsOnCutUpLines = getAllWordsOnCutUpLines;
+    if (_this.selections.cutLinesContainer) _this.selections.cutLinesContainer.remove();
     _this.selections.cutLinesContainer = _this.selections.baseSelections.svg
         .append('g')
         .attr('class', 'cutLinesContainer');
@@ -56,7 +57,9 @@ GeometricShankCutLines.prototype.drawCutLines = function () {
     _this.selections.cutLines
         .enter()
         .append('line')
-        .style('stroke', 'red')
+        .style('stroke', '#FF0066')
+        .style('stroke-width', 2)
+        .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
         .attr('x1', function (d) { return d.x1 })
         .attr('y1', function (d) { return d.y1 })
         .attr('x2', function (d) { return d.x2 })
@@ -87,7 +90,8 @@ GeometricShankCutLines.prototype.drawAuxCutLines = function () {
     _this.selections.auxCutLines
         .enter()
         .append('line')
-        .style('stroke', 'grey')
+        .style('stroke', 'none')
+        .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
         .attr('x1', function (d) { return d.x1 })
         .attr('y1', function (d) { return d.y1 })
         .attr('x2', function (d) { return d.x2 })

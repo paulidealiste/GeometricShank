@@ -34,12 +34,12 @@ export default {
                 gstx: null
             },
             heightPadding: 30,
-            widthPadding: 10
+            widthPadding: 0
         }
     },
     methods: {
-        render: function (textBoxWidth) {
-            this.wrapedExcrept = this.computeTextWrap(this.computedExcrept, this.properties.charWidth, textBoxWidth);
+        render: function () {
+            this.wrapedExcrept = this.computeTextWrap(this.computedExcrept, this.properties.width-20, this.properties.lineHeight);
             this.structure();
             this.elements.gstx = new GeometricShankText(this.selections, this.properties);
             this.elements.gstx.bindDataAndRender(this.wrapedExcrept, this.wordCharClicked, this.getClicked);
@@ -63,7 +63,7 @@ export default {
                 .attr('height', this.properties.height);
         },
         getClicked: function (line, mouseX, lineWidth) {
-            return this.getClickedWord(line, mouseX, lineWidth).word;
+            return this.getClickedWord(line, mouseX, lineWidth).foundWord;
         },
         wordCharClicked: function (word) {
             this.$emit('sendCutupString', word);
@@ -75,23 +75,23 @@ export default {
             this.cutPositions = cutPositions;
             this.$emit('sendCutupString', this.getAllWordsOnCutUpLines(this.cutPositions).join(' '));
         },
-        pasteCutUpSegments: function() {
+        pasteCutUpSegments: function () {
             this.$emit('clearCutupExcrept');
             let completeCutup = this.getCutUpSegments(this.cutPositions);
             this.$emit('sendCutupString', this.packCutupSegments(completeCutup, this.cutPositions.fieldColors));
         },
-        setHW: function () {
-            this.properties.height = this.$el.clientHeight - this.heightPadding;
-            this.properties.width = this.$el.clientWidth - this.widthPadding;
+        setHW: function (svgClientRect) {
+            this.properties.height = svgClientRect.height - this.heightPadding;
+            this.properties.width = svgClientRect.width - this.widthPadding;
         },
     },
     mounted: function () {
-        this.setHW();
         this.selections.baseSvg = d3.select(this.$el)
             .append('svg')
-            .attr('width', this.properties.width)
-            .attr('height', this.properties.height);
-        this.properties.charWidth = this.getCharWidth(window.getComputedStyle(this.$el).font);
+            .attr('width', '100%')
+            .attr('height', '100%');
+        this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
+        this.properties.charWidth = this.getCharWidth();
         this.properties.lineHeight = this.getLineHeight(this.$el);
         this.properties.clipID = this.getRandomID();
     }

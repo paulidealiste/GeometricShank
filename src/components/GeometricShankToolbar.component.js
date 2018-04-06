@@ -10,6 +10,9 @@ export default ({
             <a uk-icon="icon: grid"></a>
           </li>
           <li v-on:click="pra" uk-tooltip="title: Paste randomizer">
+            <a uk-icon="icon: settings"></a>
+          </li>
+          <li v-on:click="ccu" uk-tooltip="title: Clear cutup canvas">
             <a uk-icon="icon: file-edit"></a>
           </li>
           <li v-on:click="cal" uk-tooltip="title: Clear all">
@@ -28,6 +31,9 @@ export default ({
     },
     pra: function() {
       this.$emit('pra');
+    },
+    ccu: function() {
+      this.$emit('ccu');
     },
     cal: function() {
       this.$emit('cal');

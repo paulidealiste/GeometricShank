@@ -2,18 +2,31 @@ import * as R from 'ramda';
 
 export default {
     methods: {
-        getCharWidth(font, char) {
-            let canvas = document.createElement('canvas');
-            let ctx = canvas.getContext('2d');
-            ctx.font = window.getComputedStyle(this.$el).font;
-            let metrics = ctx.measureText(char != null ? char : "M");
-            return metrics.width;
+        getCharWidth() {
+            let char = '.';
+            let classes = ['textDimensionCalculation', 'uk-text-small'];
+            let div = document.createElement('div');
+            div.setAttribute('class', classes.join(' '));
+            div.innerHTML = char;
+            document.body.appendChild(div);
+            let chw = div.getBoundingClientRect().width;
+            div.parentNode.removeChild(div);
+            return chw;
         },
         getLineHeight(HTMLElement) {
             return parseInt(window.getComputedStyle(HTMLElement).lineHeight.replace('px', ''))
         },
         getRandomID() {
             return Math.random().toString(36).substring(7);
+        },
+        calculateCharLimit(HTMLElement, padder) {
+            let chw = this.getCharWidth();
+            let cw = HTMLElement.clientWidth - padder;
+            let CPL = Math.ceil(cw / chw);
+            let lh = this.getLineHeight(HTMLElement);
+            let ch = HTMLElement.clientHeight - padder;
+            let ANL = Math.ceil(ch / lh);
+            return Math.ceil(CPL * ANL);
         },
         shuffleArray(array) {
             var m = array.length, t, i;
@@ -25,20 +38,38 @@ export default {
             }
             return array;
         },
-        computeTextWrap(text, charWidth, lineLength) {
+        computeTextWrap(text, containerWidth, lh) {
             let wraped = [];
             let words = text.split(' ');
-            let temp = '';
+            let classes = ['lineBreakerCalculation', 'uk-text-small'];
+            let div = document.createElement('div');
+            div.setAttribute('class', classes.join(' '));
+            div.style.width = containerWidth + 'px';
+            div.style.lineHeight = lh + 'px';
+            div.innerHTML = R.head(words);
+            document.body.appendChild(div);
+
+            let controlHeight = div.getBoundingClientRect().height;
+
+            let temp = R.head(words);
             R.forEach((w) => {
-                if (temp.length * charWidth > lineLength) {
-                    temp += ' ' + w;
-                    wraped = R.append(temp.trim(), wraped);
-                    temp = '';
+                div.innerHTML = div.innerHTML + ' ' + w;
+                if (div.getBoundingClientRect().height > controlHeight) {
+                    controlHeight = div.getBoundingClientRect().height;
+                    wraped.push(temp.trim());
+                    temp = w;
                 } else {
                     temp += ' ' + w;
                 }
-            }, words);
+            }, R.tail(words));
+            wraped.push(temp);
+
+            div.parentNode.removeChild(div);
             return wraped;
+        },
+        trimLastWord(str) {
+            let lin = R.lastIndexOf(' ', str);
+            return lin != -1 ? R.slice(0, lin, str) : str;
         },
         getClickedWord(line, mouseX, lineWidth) {
             let chw = lineWidth / line.length;
@@ -73,11 +104,12 @@ export default {
             }
             return words;
         },
-        getCutUpSegments(cutPositions) {
+        getCutUpSegments(cp) {
+            let cutPositions = R.clone(cp);
             const verticalSeparate = (line, vob) => {
                 let index = this.getClickedWord(line.lineText, vob.x, line.lineWidth).foundIndex;
                 let splitWords = R.split(' ', line.lineText);
-                let splitLines = R.splitAt(index, splitWords); 
+                let splitLines = R.splitAt(index, splitWords);
                 line.lineText = R.map((sl) => sl.join(' '), splitLines);
                 return line;
             };
@@ -113,7 +145,7 @@ export default {
                     completeCutupSegments.push(arrayColumn(aml, j));
                 }
             }
-            // completeCutupSegments = this.shuffleArray(completeCutupSegments);
+            completeCutupSegments = this.shuffleArray(completeCutupSegments);
 
             let completeCutupHTML = '';
             for (let i = 0; i < cutupColors.length; i++) {
@@ -124,9 +156,6 @@ export default {
                 let segString = '<span style="color: ' + col + '">' + seg + '</span>';
                 completeCutupHTML += ' ' + segString;
             }
-
-            console.log(completeCutupHTML);
-
             return completeCutupHTML;
         }
     }
