@@ -17,10 +17,14 @@ GeometricShankGrid.prototype.constructor = GeometricShankGrid;
 
 GeometricShankGrid.prototype.calculate = function () {
     let _this = this;
-    let cellNumber = _this.baseSelections.cutLines.enter().nodes().length * _this.baseSelections.cutLines.enter().nodes().length;
-    let vl = _this.baseSelections.cutLines.enter().filter(d => d.x1 == d.x2);
-    let hl = _this.baseSelections.cutLines.enter().filter(d => d.y1 == d.y2);
+    let sortVerticals = R.sortBy(R.prop('x1'));
+    let sortHorizontals = R.sortBy(R.prop('y1'));
+    let flatAppend = R.compose(R.flatten, R.append);
+    let vl = _this.baseSelections.cutLines.enter().filter(d => d.x1 == d.x2).data();
+    let hl = _this.baseSelections.cutLines.enter().filter(d => d.y1 == d.y2).data();
     _this.setBoundLines();
+    hl = sortHorizontals(flatAppend(this.selections.horizontalBounds.enter().data(), hl));
+    vl = sortVerticals(flatAppend(this.selections.verticalBounds.enter().data(), vl));
 }
 
 GeometricShankGrid.prototype.setBoundLines = function() {
@@ -53,7 +57,7 @@ GeometricShankGrid.prototype.setBoundLines = function() {
     _this.selections.horizontalBounds
         .enter()
         .append('line')
-        .style('stroke', 'aquamarine')
+        .style('stroke', 'blue')
         .style('stroke-width', 2)
         .attr('class', 'horizontalBounds')
         .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
