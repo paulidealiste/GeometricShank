@@ -1,13 +1,15 @@
 import * as d3 from 'd3';
 import * as R from 'ramda';
+import { GeometricShankGrid } from './GeometricShankGrid.svg';
 
 export function GeometricShankCutLines(baseSelections, baseProperties, textLineSelections) {
     this.selections = {
         baseSelections: baseSelections,
         cutLinesContainer: null,
         cutLines: null,
-        auxCutLines: null
+        auxCutLines: null,
     };
+    this.grid = null;
     this.baseProperties = baseProperties;
     this.textLineSelections = textLineSelections;
     this.cutLinesData = null;
@@ -36,6 +38,7 @@ GeometricShankCutLines.prototype.drawCrossCut = function (getAllWordsOnCutUpLine
         .attr('class', 'cutLinesContainer');
     _this.drawCutLines();
     _this.drawAuxCutLines();
+    _this.displaySegmentNumbering();
     _this.calculateCutPositions();
     _this.callbacks.getAllWordsOnCutUpLines(_this.cutPositions);
 };
@@ -46,12 +49,12 @@ GeometricShankCutLines.prototype.drawCutLines = function () {
         x1: _this.baseProperties.width / 2,
         y1: 0,
         x2: _this.baseProperties.width / 2,
-        y2: _this.baseProperties.height
+        y2: _this.baseProperties.height,
     }, {
         x1: 0,
         y1: _this.baseProperties.height / 2,
         x2: _this.baseProperties.width,
-        y2: _this.baseProperties.height / 2
+        y2: _this.baseProperties.height / 2,
     }];
     _this.selections.cutLines = _this.selections.cutLinesContainer.selectAll('line.cutLine').data(cutLinesData);
     _this.selections.cutLines
@@ -73,7 +76,7 @@ GeometricShankCutLines.prototype.drawAuxCutLines = function () {
     var _this = this;
     _this.cutPositions.lines = [];
 
-    _this.textLineSelections.textLinesContainer.selectAll('text').each(function(d, i, k) {
+    _this.textLineSelections.textLinesContainer.selectAll('text').each(function (d, i, k) {
         let cutext = d3.select(k[i]);
         let lineDef = {
             x1: 0,
@@ -84,7 +87,7 @@ GeometricShankCutLines.prototype.drawAuxCutLines = function () {
             lineText: d
         };
         _this.cutPositions.lines.push(lineDef);
-     });
+    });
 
     _this.selections.auxCutLines = _this.selections.cutLinesContainer.selectAll('line.cutLine').data(_this.cutPositions.lines);
     _this.selections.auxCutLines
@@ -117,6 +120,12 @@ GeometricShankCutLines.prototype.calculateCutPositions = function () {
             });
         }
     });
+}
+
+GeometricShankCutLines.prototype.displaySegmentNumbering = function () {
+    let _this = this;
+    _this.grid = new GeometricShankGrid(_this.selections, _this.baseProperties, _this.fieldColors);
+    _this.grid.calculate();
 }
 
 GeometricShankCutLines.prototype.calculateIntersection = function (l1, l2) {
