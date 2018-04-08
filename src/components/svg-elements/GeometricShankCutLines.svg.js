@@ -124,7 +124,7 @@ GeometricShankCutLines.prototype.calculateCutPositions = function () {
 
 GeometricShankCutLines.prototype.displaySegmentNumbering = function () {
     let _this = this;
-    _this.grid = new GeometricShankGrid(_this.selections, _this.baseProperties, _this.fieldColors);
+    _this.grid = new GeometricShankGrid(_this.selections, _this.baseProperties, _this.segmentPalette);
     _this.grid.calculate();
 }
 

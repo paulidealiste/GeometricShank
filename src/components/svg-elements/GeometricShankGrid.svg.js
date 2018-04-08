@@ -7,7 +7,8 @@ export function GeometricShankGrid(baseSelections, baseProperties, fieldColors) 
     this.fieldColors = fieldColors;
     this.selections = {
         verticalBounds: null,
-        horizontalBounds: null
+        horizontalBounds: null,
+        grid: null
     }
     this.gridDefinition = null;
 }
@@ -23,11 +24,56 @@ GeometricShankGrid.prototype.calculate = function () {
     let vl = _this.baseSelections.cutLines.enter().filter(d => d.x1 == d.x2).data();
     let hl = _this.baseSelections.cutLines.enter().filter(d => d.y1 == d.y2).data();
     _this.setBoundLines();
-    hl = sortHorizontals(flatAppend(this.selections.horizontalBounds.enter().data(), hl));
     vl = sortVerticals(flatAppend(this.selections.verticalBounds.enter().data(), vl));
+    hl = sortHorizontals(flatAppend(this.selections.horizontalBounds.enter().data(), hl));
+    let cols = _this.calculateCols(vl);
+    let rows = _this.calculateRows(hl);
+    let cells = _this.calculateCells(cols, rows, _this.fieldColors);
+    _this.renderGrid(cells);
+};
+
+GeometricShankGrid.prototype.calculateCells = function (cols, rows, colors) {
+    let cells = [];
+    let cid = 1;
+
+    R.forEach((row) => {
+        R.forEach((col) => {
+            let cell = {
+                width: col.width,
+                height: row.height,
+                cellID: cid,
+                color: colors[cid - 1]
+            }
+            cells.push(cell);
+            cid++;
+        }, cols)
+    }, rows);
+    return cells;
+};
+
+GeometricShankGrid.prototype.calculateCols = function (vl) {
+    let coldef = pair => {
+        return {
+            width: Math.abs(R.last(pair).x1 - R.head(pair).x1),
+            height: R.head(pair).y2
+        }
+    };
+    let cc = R.compose(R.map(coldef), R.aperture(2));
+    return cc(vl);
+};
+
+GeometricShankGrid.prototype.calculateRows = function (hl) {
+    let rowdef = pair => {
+        return {
+            width: R.head(pair).x2,
+            height: Math.abs(R.last(pair).y1 - R.head(pair).y1)
+        }
+    };
+    let cr = R.compose(R.map(rowdef), R.aperture(2));
+    return cr(hl);
 }
 
-GeometricShankGrid.prototype.setBoundLines = function() {
+GeometricShankGrid.prototype.setBoundLines = function () {
     let _this = this;
     if (this.selections.verticalBounds) this.selections.verticalBounds.remove();
     if (this.selections.horizontalBounds) this.selections.horizontalBounds.remove();
@@ -84,4 +130,27 @@ GeometricShankGrid.prototype.setBoundLines = function() {
     _this.selections.verticalBounds
         .merge(_this.selections.verticalBounds);
     _this.selections.verticalBounds.exit().remove();
+};
+
+GeometricShankGrid.prototype.renderGrid = function (cells) {
+    let _this = this;
+    d3.select('div.gridHolderCarry').remove();
+
+    let tlp = _this.baseSelections.cutLinesContainer.node().getBoundingClientRect();
+
+    let gridHolder = d3.select(document.createElement('div'))
+        .attr('class', 'uk-flex uk-flex-wrap uk-position-absolute')
+        .attr('style', d => 'width: ' + _this.baseProperties.width + 'px;' + 'top: '+ tlp.top +'px; left: '+ tlp.left +'px;');
+    let grid = gridHolder.selectAll('div.gridCell')
+        .data(cells)
+        .enter()
+        .append('div')
+        .attr('class', 'gridCell uk-flex uk-flex-middle uk-flex-center uk-overlay-primary uk-heading-hero')
+        .attr('style', d => 'color: ' + d.color + '; width: ' + d.width + 'px; height: ' + d.height + 'px')
+        .html(d => '<span>' + d.cellID.toString() + '</span>');
+    
+    d3.select("body")
+        .append('div')
+        .attr('class', 'gridHolderCarry')
+        .html(gridHolder.node().outerHTML);
 };
