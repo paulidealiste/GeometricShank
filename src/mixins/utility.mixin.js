@@ -135,6 +135,7 @@ export default {
             return horizontalCutup;
         },
         packCutupSegments(completeCutupLines, cutupColors) {
+            let mapIndexed = R.addIndex(R.map);
             let completeCutupSegments = [];
             let arrayColumn = (array, n) => R.map(x => x[n], array);
             for (let i = 0; i < completeCutupLines.length; i++) {
@@ -142,18 +143,24 @@ export default {
                 let aml = R.pluck('lineText', lines);
                 let sampleVerticalCutsLen = aml[0].length;
                 for (let j = 0; j < sampleVerticalCutsLen; j++) {
-                    completeCutupSegments.push(arrayColumn(aml, j));
+                    let cuseg = {
+                        text: arrayColumn(aml, j),
+                    }
+                    completeCutupSegments.push(cuseg);
                 }
             }
+
+            completeCutupSegments = mapIndexed((cuseg, index) => {
+                cuseg.color = cutupColors[index];
+                return cuseg;
+            }, completeCutupSegments);
+
             completeCutupSegments = this.shuffleArray(completeCutupSegments);
 
             let completeCutupHTML = '';
-            for (let i = 0; i < cutupColors.length; i++) {
-                let col = cutupColors[i];
-                let seg = completeCutupSegments[i];
-                console.log(col);
-                console.log(seg);
-                let segString = '<span style="color: ' + col + '">' + seg + '</span>';
+            for (let i = 0; i < completeCutupSegments.length; i++) {
+                let segm = completeCutupSegments[i];
+                let segString = '<span style="color: ' + segm.color + '">' + segm.text + '</span>';
                 completeCutupHTML += ' ' + segString;
             }
             return completeCutupHTML;

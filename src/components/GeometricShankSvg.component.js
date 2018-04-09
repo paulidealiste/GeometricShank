@@ -46,7 +46,10 @@ export default {
             this.elements.gsln = new GeometricShankCutLines(this.selections, this.properties, this.elements.gstx.selections);
         },
         structure: function () {
-            if (this.selections.svg != null) this.selections.svg.remove();
+            if (this.selections.svg != null) {
+                this.selections.svg.remove();
+                d3.select('div.gridHolderCarry').remove();
+            };
             this.selections.svg = this.selections.baseSvg
                 .append('g');
             this.selections.svg
@@ -79,6 +82,9 @@ export default {
             this.$emit('clearCutupExcrept');
             let completeCutup = this.getCutUpSegments(this.cutPositions);
             this.$emit('sendCutupString', this.packCutupSegments(completeCutup, this.cutPositions.fieldColors));
+        },
+        showSegments: function() {
+            this.elements.gsln.showSegments();
         },
         setHW: function (svgClientRect) {
             this.properties.height = svgClientRect.height - this.heightPadding;

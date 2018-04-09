@@ -67,6 +67,9 @@ export default ({
       this.clearCutupExcrept();
       this.workingExcrept = '';
     },
+    showSegments: function() {
+      this.$refs.gsc.showSegments();
+    },
     userTyped: function (typed) {
       this.workingExcrept = typed.replace(/[\r\n]/g, ' ').replace(/ {2,}/g, ' ').trim();
     }

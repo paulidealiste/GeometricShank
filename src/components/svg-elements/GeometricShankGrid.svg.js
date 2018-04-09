@@ -11,6 +11,7 @@ export function GeometricShankGrid(baseSelections, baseProperties, fieldColors) 
         grid: null
     }
     this.gridDefinition = null;
+    this.cells = null;
 }
 
 GeometricShankGrid.prototype = Object.create(GeometricShankGrid.prototype);
@@ -28,8 +29,8 @@ GeometricShankGrid.prototype.calculate = function () {
     hl = sortHorizontals(flatAppend(this.selections.horizontalBounds.enter().data(), hl));
     let cols = _this.calculateCols(vl);
     let rows = _this.calculateRows(hl);
-    let cells = _this.calculateCells(cols, rows, _this.fieldColors);
-    _this.renderGrid(cells);
+    _this.cells = _this.calculateCells(cols, rows, _this.fieldColors);
+    _this.renderGrid();
 };
 
 GeometricShankGrid.prototype.calculateCells = function (cols, rows, colors) {
@@ -104,7 +105,7 @@ GeometricShankGrid.prototype.setBoundLines = function () {
         .enter()
         .append('line')
         .style('stroke', 'blue')
-        .style('stroke-width', 2)
+        .style('stroke-width', 0)
         .attr('class', 'horizontalBounds')
         .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
         .attr('x1', function (d) { return d.x1 })
@@ -120,7 +121,7 @@ GeometricShankGrid.prototype.setBoundLines = function () {
         .enter()
         .append('line')
         .style('stroke', 'aquamarine')
-        .style('stroke-width', 2)
+        .style('stroke-width', 0)
         .attr('class', 'verticalBounds')
         .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
         .attr('x1', function (d) { return d.x1 })
@@ -132,25 +133,33 @@ GeometricShankGrid.prototype.setBoundLines = function () {
     _this.selections.verticalBounds.exit().remove();
 };
 
-GeometricShankGrid.prototype.renderGrid = function (cells) {
+GeometricShankGrid.prototype.renderGrid = function () {
     let _this = this;
     d3.select('div.gridHolderCarry').remove();
+    let t = d3.transition().duration(750).ease(d3.easeLinear);
 
     let tlp = _this.baseSelections.cutLinesContainer.node().getBoundingClientRect();
 
     let gridHolder = d3.select(document.createElement('div'))
         .attr('class', 'uk-flex uk-flex-wrap uk-position-absolute')
-        .attr('style', d => 'width: ' + _this.baseProperties.width + 'px;' + 'top: '+ tlp.top +'px; left: '+ tlp.left +'px;');
+        .attr('style', d => 'width: ' + _this.baseProperties.width + 'px;' + 'top: ' + tlp.top + 'px; left: ' + tlp.left + 'px;');
     let grid = gridHolder.selectAll('div.gridCell')
-        .data(cells)
+        .data(_this.cells)
         .enter()
         .append('div')
-        .attr('class', 'gridCell uk-flex uk-flex-middle uk-flex-center uk-overlay-primary uk-heading-hero')
+        .attr('class', 'gridCell uk-flex uk-flex-middle uk-flex-center uk-overlay-default uk-heading-hero')
         .attr('style', d => 'color: ' + d.color + '; width: ' + d.width + 'px; height: ' + d.height + 'px')
         .html(d => '<span>' + d.cellID.toString() + '</span>');
-    
+
     d3.select("body")
         .append('div')
         .attr('class', 'gridHolderCarry')
-        .html(gridHolder.node().outerHTML);
+        .html(gridHolder.node().outerHTML)
+        .style('opacity', 0)
+        .transition(t)
+        .style('opacity', 1)
+        .transition(t)
+        .delay(1000)
+        .style('opacity', 0)
+        .remove();
 };

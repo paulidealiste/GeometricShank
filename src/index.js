@@ -1,5 +1,6 @@
 import '../assets/fonts/Inconsolata.scss';
 import './stylesheets/main.scss';
+import i18n from './locales/index';
 import * as UIkit from 'uikit';
 import * as Icons from 'uikit/dist/js/uikit-icons.js'
 
@@ -18,5 +19,6 @@ Vue.component('trinity-rings-spinner', TrinityRingsSpinner);
 // Creating a root instance
 
 new Vue ({
-  el: '#GeometricShankApp'
+  el: '#GeometricShankApp',
+  i18n
 });

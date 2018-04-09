@@ -23,7 +23,7 @@ export function GeometricShankCutLines(baseSelections, baseProperties, textLineS
     this.callbacks = {
         getAllWordsOnCutUpLines: null
     };
-    this.segmentPalette = ['#1693A5', '#ADD8C7', '#FBB829', '#FF0066', '#556270', '#ff6666', '#ff8080', '#fbbb29', '#ff9900', '#ff7a22', '#1693a5', '#036564'];
+    this.segmentPalette = ['#1693A5', '#2A363B', '#420943', '#FF4B0B', '#800F25', '#FF4040', '#089E71', '#DE7B0B'];
 }
 
 GeometricShankCutLines.prototype = Object.create(GeometricShankCutLines.prototype);
@@ -126,6 +126,11 @@ GeometricShankCutLines.prototype.displaySegmentNumbering = function () {
     let _this = this;
     _this.grid = new GeometricShankGrid(_this.selections, _this.baseProperties, _this.segmentPalette);
     _this.grid.calculate();
+}
+
+GeometricShankCutLines.prototype.showSegments = function () {
+    let _this = this;
+    _this.grid.renderGrid();
 }
 
 GeometricShankCutLines.prototype.calculateIntersection = function (l1, l2) {

@@ -3,40 +3,49 @@ export default ({
     <div class="uk-section-xsmall uk-section-secondary uk-flex uk-width-1-1">
     <div class="uk-container">
         <ul class="uk-iconnav">
-          <li v-on:click="nex" uk-tooltip="title: New random excrept">
+        <li v-on:click="nex" v-bind:uk-tooltip="'title:' + $t('components.tooltips.newrandomexcrept')">
             <a uk-icon="icon: comments"></a>
           </li>
-          <li v-on:click="ctg" uk-tooltip="title: Cut text geometrically">
+          <li v-on:click="ctg" v-bind:uk-tooltip="'title:' + $t('components.tooltips.cuttextgeometrically')">
             <a uk-icon="icon: grid"></a>
           </li>
-          <li v-on:click="pra" uk-tooltip="title: Paste randomizer">
+          <li v-on:click="pra" v-bind:uk-tooltip="'title:' + $t('components.tooltips.pasterandomizer')">
             <a uk-icon="icon: settings"></a>
           </li>
-          <li v-on:click="ccu" uk-tooltip="title: Clear cutup canvas">
+          <li v-on:click="ccu" v-bind:uk-tooltip="'title:' + $t('components.tooltips.clearcutupcanvas')">
             <a uk-icon="icon: file-edit"></a>
           </li>
-          <li v-on:click="cal" uk-tooltip="title: Clear all">
+          <li v-on:click="cal" v-bind:uk-tooltip="'title:' + $t('components.tooltips.clearall')">
             <a uk-icon="icon: trash"></a>
+          </li>
+          <li>
+            <a uk-icon="icon: more-vertical"></a>
+          </li>          
+          <li v-on:click="sse" v-bind:uk-tooltip="'title:' + $t('components.tooltips.showsegments')">
+            <a uk-icon="icon: paint-bucket"></a>
           </li>
         </ul>
       </div>
     </div>
   `,
   methods: {
-    nex: function() {
+    nex: function () {
       this.$emit('nex');
     },
-    ctg: function() {
+    ctg: function () {
       this.$emit('ctg');
     },
-    pra: function() {
+    pra: function () {
       this.$emit('pra');
     },
-    ccu: function() {
+    ccu: function () {
       this.$emit('ccu');
     },
-    cal: function() {
+    cal: function () {
       this.$emit('cal');
     },
+    sse: function () {
+      this.$emit('sse');
+    }
   }
 })
