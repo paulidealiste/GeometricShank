@@ -157,13 +157,21 @@ export default {
 
             completeCutupSegments = this.shuffleArray(completeCutupSegments);
 
-            let completeCutupHTML = '';
-            for (let i = 0; i < completeCutupSegments.length; i++) {
-                let segm = completeCutupSegments[i];
-                let segString = '<span style="color: ' + segm.color + '">' + segm.text + '</span>';
-                completeCutupHTML += ' ' + segString;
-            }
-            return completeCutupHTML;
+            return completeCutupSegments;
+        },
+        lineCompleteCutupColor(completeCutupSegments) {
+            completeCutupSegments = R.map((ccs) => { //TODO - mixed spans
+                ccs.color = R.repeat(ccs.color, ccs.text.length);
+                return ccs;
+            }, completeCutupSegments);
+            let texts = R.flatten(R.pluck('text', completeCutupSegments));
+            let colors = R.flatten(R.pluck('color', completeCutupSegments));
+            return R.map((colipair) => {
+                return {
+                    text: R.head(colipair),
+                    color: R.last(colipair)
+                }
+            }, R.zip(texts, colors));
         }
-    }
+    },
 }

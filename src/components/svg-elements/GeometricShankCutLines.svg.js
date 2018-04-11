@@ -133,6 +133,11 @@ GeometricShankCutLines.prototype.showSegments = function () {
     _this.grid.renderGrid();
 }
 
+GeometricShankCutLines.prototype.getGridCells = function() {
+    let _this = this;
+    return _this.grid.getCells();
+}
+
 GeometricShankCutLines.prototype.calculateIntersection = function (l1, l2) {
     let a1 = l1.y2 - l1.y1;
     let b1 = l1.x1 - l1.x2;

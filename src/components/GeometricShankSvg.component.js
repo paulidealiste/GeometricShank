@@ -4,6 +4,7 @@ import * as R from 'ramda';
 import * as d3 from 'd3';
 import { GeometricShankCutLines } from './svg-elements/GeometricShankCutLines.svg'
 import { GeometricShankText } from './svg-elements/GeometricShankText.svg';
+import { GeometricShankHTML } from './svg-elements/GeometricShankHTML.svg';
 
 export default {
     template: `
@@ -31,7 +32,8 @@ export default {
             },
             elements: {
                 gsln: null,
-                gstx: null
+                gstx: null,
+                gsht: null
             },
             heightPadding: 30,
             widthPadding: 0
@@ -39,11 +41,12 @@ export default {
     },
     methods: {
         render: function () {
-            this.wrapedExcrept = this.computeTextWrap(this.computedExcrept, this.properties.width-20, this.properties.lineHeight);
+            this.wrapedExcrept = this.computeTextWrap(this.computedExcrept, this.properties.width - 20, this.properties.lineHeight);
             this.structure();
             this.elements.gstx = new GeometricShankText(this.selections, this.properties);
             this.elements.gstx.bindDataAndRender(this.wrapedExcrept, this.wordCharClicked, this.getClicked);
             this.elements.gsln = new GeometricShankCutLines(this.selections, this.properties, this.elements.gstx.selections);
+            this.elements.gsht = new GeometricShankHTML();
         },
         structure: function () {
             if (this.selections.svg != null) {
@@ -79,11 +82,19 @@ export default {
             this.$emit('sendCutupString', this.getAllWordsOnCutUpLines(this.cutPositions).join(' '));
         },
         pasteCutUpSegments: function () {
-            this.$emit('clearCutupExcrept');
-            let completeCutup = this.getCutUpSegments(this.cutPositions);
-            this.$emit('sendCutupString', this.packCutupSegments(completeCutup, this.cutPositions.fieldColors));
+            if (this.cutPositions) {
+                this.$emit('clearCutupExcrept');
+                let completeCutup = this.getCutUpSegments(this.cutPositions);
+                let completeCutupSegments = this.packCutupSegments(completeCutup, this.cutPositions.fieldColors);
+                let simpleHTML = this.elements.gsht.simpleHTMLSegments(completeCutupSegments);
+                let linedCutupSegments = this.lineCompleteCutupColor(completeCutupSegments);
+                let packedHTML = this.elements.gsht.packedHTMLSegments(linedCutupSegments);
+                // this.elements.gsln.getGridCells()
+                // this.$emit('sendCutupString', simpleHTML);
+                this.$emit('sendPackageString', packedHTML);
+            }
         },
-        showSegments: function() {
+        showSegments: function () {
             this.elements.gsln.showSegments();
         },
         setHW: function (svgClientRect) {

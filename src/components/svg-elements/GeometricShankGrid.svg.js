@@ -163,3 +163,8 @@ GeometricShankGrid.prototype.renderGrid = function () {
         .style('opacity', 0)
         .remove();
 };
+
+GeometricShankGrid.prototype.getCells = function() {
+    let _this = this;
+    return _this.cells;
+};

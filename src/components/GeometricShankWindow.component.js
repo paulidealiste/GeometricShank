@@ -15,7 +15,7 @@ export default ({
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
         <div class="uk-card uk-card-primary uk-card-body uk-width-1-1 uk-flex uk-flex-1 uk-overflow-auto uk-padding-remove">
-          <geometric-shank-svg v-bind:computed-excrept="computedExcrept" ref="gsc" v-on:sendCutupString="addCutupString" v-on:clearCutupExcrept="clearCutupExcrept"></geometric-shank-svg>
+          <geometric-shank-svg v-bind:computed-excrept="computedExcrept" ref="gsc" v-on:sendCutupString="addCutupString" v-on:clearCutupExcrept="clearCutupExcrept" v-on:sendPackageString="addPackageString"></geometric-shank-svg>
         </div>
       </div>
       <div class="uk-flex uk-width-1-3@s uk-flex-1 uk-padding-small">
@@ -41,7 +41,7 @@ export default ({
       this.cutupExcrept = '';
       electron.ipcRenderer.send('reachForExcrept');
       electron.ipcRenderer.on('excreptReached', (event, arg) => {
-        this.workingExcrept = arg.replace(/[\r\n]/g, ' ').replace(/ {2,}/g,' ').trim();
+        this.workingExcrept = arg.replace(/[\r\n]/g, ' ').replace(/ {2,}/g, ' ').trim();
         this.workingExcrept = this.trimLastWord(R.slice(0, this.charLimit, this.workingExcrept));
         this.loading = false;
       });
@@ -54,6 +54,10 @@ export default ({
         this.cutupExcrept += word;
       }
     },
+    addPackageString: function (packedHTML) {
+      this.clearCutupExcrept();
+      this.cutupExcrept = packedHTML;
+    },
     cutTextGeometrically: function () {
       this.$refs.gsc.cutTextGeometrically();
     },
@@ -63,11 +67,11 @@ export default ({
     clearCutupExcrept: function () {
       this.cutupExcrept = '';
     },
-    clearAll: function() {
+    clearAll: function () {
       this.clearCutupExcrept();
       this.workingExcrept = '';
     },
-    showSegments: function() {
+    showSegments: function () {
       this.$refs.gsc.showSegments();
     },
     userTyped: function (typed) {
@@ -86,7 +90,7 @@ export default ({
     'geometric-shank-svg': GeometricShankSvg,
     'geometric-shank-textarea': GeometricShangTextarea
   },
-  mounted: function() {
+  mounted: function () {
     this.charLimit = this.calculateCharLimit(this.$refs.wet, 15);
   }
 })
