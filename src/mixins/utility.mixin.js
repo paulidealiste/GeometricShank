@@ -160,18 +160,36 @@ export default {
             return completeCutupSegments;
         },
         lineCompleteCutupColor(completeCutupSegments) {
-            completeCutupSegments = R.map((ccs) => { //TODO - mixed spans
-                ccs.color = R.repeat(ccs.color, ccs.text.length);
-                return ccs;
-            }, completeCutupSegments);
-            let texts = R.flatten(R.pluck('text', completeCutupSegments));
-            let colors = R.flatten(R.pluck('color', completeCutupSegments));
-            return R.map((colipair) => {
-                return {
-                    text: R.head(colipair),
-                    color: R.last(colipair)
+            let maxSegmentLen = -Infinity;
+            let linedComplete = R.map((ccs) => {
+                if (maxSegmentLen < ccs.text.length) {
+                    maxSegmentLen = ccs.text.length;
                 }
-            }, R.zip(texts, colors));
+                let colors = R.repeat(ccs.color, ccs.text.length);
+                let linedSegment = R.map((lpai) => {
+                    return {
+                        text: R.head(lpai),
+                        color: R.last(lpai)
+                    }
+                }, R.zip(ccs.text, colors));
+                return linedSegment;
+            }, completeCutupSegments);
+
+            const arrayColumn = (array, n) => R.map(x => x[n], array);
+            let rangedVersion = R.range(0, maxSegmentLen);
+
+            let cli = R.map((n) => {
+                return arrayColumn(linedComplete, n);
+            }, rangedVersion);
+
+            const notNull = (x) => x != null;
+            return R.filter(notNull, R.flatten(cli));
+        },
+        rawText: function (text) {
+            var div = document.createElement("div");
+            div.innerHTML = text;
+            let rawtext = div.textContent || div.innerText || "";
+            return rawtext;
         }
     },
 }

@@ -24,6 +24,12 @@ export default ({
           <li v-on:click="sse" v-bind:uk-tooltip="'title:' + $t('components.tooltips.showsegments')">
             <a uk-icon="icon: paint-bucket"></a>
           </li>
+          <li>
+            <a uk-icon="icon: more-vertical"></a>
+          </li>
+          <li v-on:click="pcu" v-bind:uk-tooltip="'title:' + $t('components.tooltips.printcutup')">
+            <a uk-icon="icon: album"></a>
+          </li>   
         </ul>
       </div>
     </div>
@@ -46,6 +52,9 @@ export default ({
     },
     sse: function () {
       this.$emit('sse');
+    },
+    pcu: function() {
+      this.$emit('pcu');
     }
   }
 })

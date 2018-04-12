@@ -7,7 +7,12 @@ export default {
                 pasterandomizer: "Paste randomizer",
                 clearcutupcanvas: "Clear cutup canvas",
                 clearall: "Clear all",
-                showsegments: "Show segments"
+                showsegments: "Show segments",
+                printcutup: "Save current cutup"
+            },
+            dialogs: {
+                printsuccess: "Current cutup saved to ",
+                printfailure: "Curent cutup not saved"
             }
         }
     }

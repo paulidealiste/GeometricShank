@@ -3,6 +3,7 @@ import Vue from 'vue';
 import GeometricShankSvg from './GeometricShankSvg.component';
 import GeometricShangTextarea from './GeometricShankTextarea.component';
 import UtilityMixin from '../mixins/utility.mixin';
+import * as UIkit from 'uikit';
 import * as R from 'ramda';
 
 export default ({
@@ -73,6 +74,20 @@ export default ({
     },
     showSegments: function () {
       this.$refs.gsc.showSegments();
+    },
+    printCutup:function() {
+      let toto = this.computeTextWrap(this.rawText(this.cutupExcrept), this.$refs.gsc.properties.width - 20, this.$refs.gsc.properties.lineHeight);
+      electron.ipcRenderer.send('printToto', toto);
+      electron.ipcRenderer.on('totoPrinted', (event, arg) => {
+        let trans = this.$t("components.dialogs.printsuccess") + '<br>' + arg; 
+        let noty = R.once(UIkit.notification('<span uk-icon="icon: check"></span><span class="uk-text-small uk-position-center">'+ trans +'</span>'));
+        noty();
+      });
+      electron.ipcRenderer.on('totoNotPrinted', (event, arg) => {
+        let trans = this.$t("components.dialogs.printfailure");
+        let noty = R.once(UIkit.notification('<span uk-icon="icon: close"></span><span class="uk-text-small uk-position-center">'+ trans +'</span>'));
+        noty();
+      });
     },
     userTyped: function (typed) {
       this.workingExcrept = typed.replace(/[\r\n]/g, ' ').replace(/ {2,}/g, ' ').trim();

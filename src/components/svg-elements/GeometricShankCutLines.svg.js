@@ -23,7 +23,16 @@ export function GeometricShankCutLines(baseSelections, baseProperties, textLineS
     this.callbacks = {
         getAllWordsOnCutUpLines: null
     };
-    this.segmentPalette = ['#1693A5', '#2A363B', '#420943', '#FF4B0B', '#800F25', '#FF4040', '#089E71', '#DE7B0B'];
+    this.segmentPalette = [
+        '#00A0B0',
+        '#FF7A22',
+        '#99173C',
+        '#6A4A3C',
+        '#005F6B',
+        '#00B4CC',
+        '#555152',
+        '#2E2633'
+    ];
 }
 
 GeometricShankCutLines.prototype = Object.create(GeometricShankCutLines.prototype);
@@ -133,7 +142,7 @@ GeometricShankCutLines.prototype.showSegments = function () {
     _this.grid.renderGrid();
 }
 
-GeometricShankCutLines.prototype.getGridCells = function() {
+GeometricShankCutLines.prototype.getGridCells = function () {
     let _this = this;
     return _this.grid.getCells();
 }

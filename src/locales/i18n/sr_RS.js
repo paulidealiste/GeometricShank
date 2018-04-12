@@ -7,7 +7,12 @@ export default {
                 pasterandomizer: "Slucajni kombinator",
                 clearcutupcanvas: "Ocisti kombinacije",
                 clearall: "Ocisti sve",
-                showsegments: "Prikazi segmente"
+                showsegments: "Prikazi segmente",
+                printcutup: "Sacuvaj trenutni prikaz"
+            },
+            dialogs: {
+                printsuccess: "Trenutni prikaz sacuvan: ",
+                printfailure: "Trenutni prikaz nije sacuvan"
             }
         }
     }

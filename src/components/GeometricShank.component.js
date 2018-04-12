@@ -20,7 +20,7 @@ export default ({
       </div>
     </nav>
     <div class="uk-flex">
-      <geometric-shank-toolbar v-on:nex="newRandomExcrept" v-on:cal="clearAll" v-on:ccu="clearCutupExcrept" v-on:ctg="cutTextGeometrically" v-on:pra="pasteCutUpSegments" v-on:sse="showSegments"></geometric-shank-toolbar>
+      <geometric-shank-toolbar v-on:nex="newRandomExcrept" v-on:cal="clearAll" v-on:ccu="clearCutupExcrept" v-on:ctg="cutTextGeometrically" v-on:pra="pasteCutUpSegments" v-on:sse="showSegments" v-on:pcu="printCutup"></geometric-shank-toolbar>
     </div>
     <div class="uk-flex uk-flex-1">
       <geometric-shank-window ref="gsw"></geometric-shank-window>
@@ -45,6 +45,9 @@ export default ({
     },
     showSegments: function() {
       this.$refs.gsw.showSegments();
+    },
+    printCutup: function() {
+      this.$refs.gsw.printCutup(); 
     }
   },
   components: {
