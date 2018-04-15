@@ -60,6 +60,14 @@ textarea {
   color: $card-default-color;
 }
 
+.activeFreehand {
+  fill: none;
+  stroke: $palette-red;
+  stroke-width: $freehand-stroke;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
 
 ::-webkit-scrollbar {
   width: $scrollbar-width;

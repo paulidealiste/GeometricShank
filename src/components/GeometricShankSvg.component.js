@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 import { GeometricShankCutLines } from './svg-elements/GeometricShankCutLines.svg'
 import { GeometricShankText } from './svg-elements/GeometricShankText.svg';
 import { GeometricShankHTML } from './svg-elements/GeometricShankHTML.svg';
+import { GeometricShankFreehand } from './svg-elements/GeometricShankFreehand.svg';
 
 export default {
     template: `
@@ -33,7 +34,8 @@ export default {
             elements: {
                 gsln: null,
                 gstx: null,
-                gsht: null
+                gsht: null,
+                gsfh: null
             },
             heightPadding: 30,
             widthPadding: 0
@@ -47,6 +49,7 @@ export default {
             this.elements.gstx.bindDataAndRender(this.wrapedExcrept, this.wordCharClicked, this.getClicked);
             this.elements.gsln = new GeometricShankCutLines(this.selections, this.properties, this.elements.gstx.selections);
             this.elements.gsht = new GeometricShankHTML();
+            this.elements.gsfh = new GeometricShankFreehand(this.selections, this.properties, this.wordsOnFreehandPath);
         },
         structure: function () {
             if (this.selections.svg != null) {
@@ -76,6 +79,16 @@ export default {
         },
         cutTextGeometrically: function () {
             this.elements.gsln.drawCrossCut(this.wordsOnCutUpLines);
+        },
+        manageFreehandMode: function (freehand) {
+            if (freehand) {
+                this.elements.gsfh.switchOn(this.elements.gstx.selections);
+            } else {
+                this.elements.gsfh.switchOff();
+            }
+        },
+        wordsOnFreehandPath: function(freehandPath) {
+            this.prepareAndSetFreehandCutup(freehandPath);
         },
         wordsOnCutUpLines: function (cutPositions) {
             this.cutPositions = cutPositions;

@@ -62,6 +62,9 @@ export default ({
     cutTextGeometrically: function () {
       this.$refs.gsc.cutTextGeometrically();
     },
+    manageFreehandMode: function (freehand) {
+      this.$refs.gsc.manageFreehandMode(freehand);
+    },
     pasteCutUpSegments: function () {
       this.$refs.gsc.pasteCutUpSegments();
     },
@@ -75,17 +78,17 @@ export default ({
     showSegments: function () {
       this.$refs.gsc.showSegments();
     },
-    printCutup:function() {
+    printCutup: function () {
       let toto = this.computeTextWrap(this.rawText(this.cutupExcrept), this.$refs.gsc.properties.width - 20, this.$refs.gsc.properties.lineHeight);
       electron.ipcRenderer.send('printToto', toto);
       electron.ipcRenderer.on('totoPrinted', (event, arg) => {
-        let trans = this.$t("components.dialogs.printsuccess") + '<br>' + arg; 
-        let noty = R.once(UIkit.notification('<span uk-icon="icon: check"></span><span class="uk-text-small uk-position-center">'+ trans +'</span>'));
+        let trans = this.$t("components.dialogs.printsuccess") + '<br>' + arg;
+        let noty = R.once(UIkit.notification('<span uk-icon="icon: check"></span><span class="uk-text-small uk-position-center">' + trans + '</span>'));
         noty();
       });
       electron.ipcRenderer.on('totoNotPrinted', (event, arg) => {
         let trans = this.$t("components.dialogs.printfailure");
-        let noty = R.once(UIkit.notification('<span uk-icon="icon: close"></span><span class="uk-text-small uk-position-center">'+ trans +'</span>'));
+        let noty = R.once(UIkit.notification('<span uk-icon="icon: close"></span><span class="uk-text-small uk-position-center">' + trans + '</span>'));
         noty();
       });
     },

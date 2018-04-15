@@ -4,6 +4,7 @@ export default {
             tooltips: {
                 newrandomexcrept: "New random excrept",
                 cuttextgeometrically: "Cut text geometrically",
+                freehandtextpath: "Freehand text-through path",
                 pasterandomizer: "Paste randomizer",
                 clearcutupcanvas: "Clear cutup canvas",
                 clearall: "Clear all",

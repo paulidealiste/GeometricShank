@@ -104,6 +104,9 @@ export default {
             }
             return words;
         },
+        prepareAndSetFreehandCutup(freehandCutPositions) {
+            
+        },
         getCutUpSegments(cp) {
             let cutPositions = R.clone(cp);
             const verticalSeparate = (line, vob) => {

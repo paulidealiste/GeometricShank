@@ -9,6 +9,10 @@ export default ({
           <li v-on:click="ctg" v-bind:uk-tooltip="'title:' + $t('components.tooltips.cuttextgeometrically')">
             <a uk-icon="icon: grid"></a>
           </li>
+          <li v-on:click="frh" v-bind:uk-tooltip="'title:' + $t('components.tooltips.freehandtextpath')">
+            <a v-if="freehand" uk-icon="icon: pencil"></a>
+            <a v-else uk-icon="icon: file"></a>
+          </li>
           <li v-on:click="pra" v-bind:uk-tooltip="'title:' + $t('components.tooltips.pasterandomizer')">
             <a uk-icon="icon: settings"></a>
           </li>
@@ -34,6 +38,11 @@ export default ({
       </div>
     </div>
   `,
+  data: function() {
+    return {
+      freehand: false
+    }
+  },
   methods: {
     nex: function () {
       this.$emit('nex');
@@ -53,8 +62,12 @@ export default ({
     sse: function () {
       this.$emit('sse');
     },
-    pcu: function() {
+    pcu: function () {
       this.$emit('pcu');
+    },
+    frh: function() {
+      this.freehand = !this.freehand;
+      this.$emit('frh', this.freehand);
     }
   }
 })
