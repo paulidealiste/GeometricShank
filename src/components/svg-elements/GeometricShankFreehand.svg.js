@@ -34,6 +34,7 @@ GeometricShankFreehand.prototype.constructor = GeometricShankFreehand;
 GeometricShankFreehand.prototype.switchOn = function (textLineSelections) {
     let _this = this;
     _this.createTextLines(textLineSelections);
+    if (_this.selections.activeFreehandContainer) _this.selections.activeFreehandContainer.remove();
     _this.selections.activeFreehandContainer = _this.selections.baseSelections.svg
         .append('g')
         .attr('class', 'activeFreehandContainer');
@@ -49,19 +50,19 @@ GeometricShankFreehand.prototype.switchOn = function (textLineSelections) {
 
 GeometricShankFreehand.prototype.createTextLines = function (textLineSelections) {
     let _this = this;
-    _this.textLines = [];
+    _this.textLines = d3.quadtree()
+        .x(function (d) { return d.x })
+        .y(function (d) { return d.y });
     if (textLineSelections) {
         textLineSelections.textLinesContainer.selectAll('text').each(function (d, i, k) {
             let cutext = d3.select(k[i]);
             let lineDef = {
-                x1: 0,
-                y1: parseFloat(cutext.attr('y')),
-                x2: _this.baseProperties.width,
-                y2: parseFloat(cutext.attr('y')),
+                x: 0,
+                y: parseFloat(cutext.attr('y')),
                 lineWidth: cutext.node().getBBox().width,
                 lineText: d
             };
-            _this.textLines.push(lineDef);
+            _this.textLines.add(lineDef);
         });
     }
 };
@@ -103,10 +104,12 @@ GeometricShankFreehand.prototype.freehandDragging = function () {
 
 GeometricShankFreehand.prototype.freehandDragEnd = function () {
     let _this = this;
-    console.log(_this.textLines);
-    console.log(_this.dragObject.path);
-    // Quadtree ? 
-    _this.callbacks.freehandDragEnd(_this.dragObject.path);
+    let freehandCutpositions = R.map((pathPoint) => {
+        let line = R.clone(_this.textLines.find(pathPoint.x, pathPoint.y));
+        line.x = pathPoint.x;
+        return line;
+    }, _this.dragObject.path)
+    _this.callbacks.freehandDragEnd(freehandCutpositions);
 };
 
 GeometricShankFreehand.prototype.switchOff = function () {

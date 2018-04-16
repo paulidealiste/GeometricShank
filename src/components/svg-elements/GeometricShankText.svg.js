@@ -29,11 +29,11 @@ GeometricShankText.prototype.bindDataAndRender = function (data, wcCallback, gcC
 GeometricShankText.prototype.renderTextLines = function (data) {
     let _this = this;
     _this.selections.textLines = _this.selections.textLinesContainer.selectAll('text.textLineLine')
-        .data(data, function(d) { return d; });
-    _this.selections.textLines 
+        .data(data, function (d) { return d; });
+    _this.selections.textLines
         .enter()
         .append('text')
-        .attr('class', 'textLineLine noselect')
+        .attr('class', 'textLineLine selectWordCursor noselect')
         .attr('x', 0)
         .attr('y', (d, i) => {
             return (i + 1) * _this.baseProperties.lineHeight
@@ -47,4 +47,15 @@ GeometricShankText.prototype.renderTextLines = function (data) {
     _this.selections.textLines
         .merge(_this.selections.textLines);
     _this.selections.textLines.exit().remove();
+};
+
+GeometricShankText.prototype.setCursor = function (freehand) {
+    let _this = this;
+    if (_this.selections.textLines) {
+        if (freehand) {
+            _this.selections.textLinesContainer.selectAll('text').attr('class', 'textLineLine cutWordsCursor noselect');
+        } else {
+            _this.selections.textLinesContainer.selectAll('text').attr('class', 'textLineLine selectWordCursor noselect');
+        }
+    }
 };

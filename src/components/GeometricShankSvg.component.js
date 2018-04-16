@@ -82,13 +82,17 @@ export default {
         },
         manageFreehandMode: function (freehand) {
             if (freehand) {
+                this.selections.svg.attr('class', 'cutWordsCursor');
+                this.elements.gstx.setCursor(true);
                 this.elements.gsfh.switchOn(this.elements.gstx.selections);
             } else {
+                this.selections.svg.attr('class', '');
+                this.elements.gstx.setCursor(false);
                 this.elements.gsfh.switchOff();
             }
         },
-        wordsOnFreehandPath: function(freehandPath) {
-            this.prepareAndSetFreehandCutup(freehandPath);
+        wordsOnFreehandPath: function (freehandCutpositions) {
+            this.$emit('sendCutupString', this.prepareAndSetFreehandCutup(freehandCutpositions).join(' '));
         },
         wordsOnCutUpLines: function (cutPositions) {
             this.cutPositions = cutPositions;

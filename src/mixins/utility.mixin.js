@@ -105,7 +105,15 @@ export default {
             return words;
         },
         prepareAndSetFreehandCutup(freehandCutPositions) {
-            
+            let getWord = (cp) => this.getClickedWord(cp.lineText, cp.x, cp.lineWidth).foundWord;
+            let freehandWordsRep = R.map(getWord, freehandCutPositions);
+
+            let filterIndexed = R.addIndex(R.filter);
+            let freehandWords = filterIndexed((item, idx, list) => {
+                return item != list[idx + 1];
+            }, freehandWordsRep);
+
+            return freehandWords;
         },
         getCutUpSegments(cp) {
             let cutPositions = R.clone(cp);
