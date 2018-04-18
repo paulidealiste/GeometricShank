@@ -5,12 +5,13 @@ const url = require('url');
 const H = require('./helpers.js');
 
 
-let mainWindow;
+let mainWindow, splashWindow;
 
-function createWindow() {
+function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1366,
-    height: 768
+    height: 768,
+    show: false
   })
 
   mainWindow.setMenu(null)
@@ -26,9 +27,39 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  mainWindow.once('ready-to-show', () => {
+    setTimeout(() => {
+      splashWindow.destroy();
+      mainWindow.show();
+    }, 5000);
+  })
 }
 
-app.on('ready', createWindow)
+// Splash screen controls
+
+function createSplashWindow() {
+  splashWindow = new BrowserWindow({
+    width: 680,
+    height: 380,
+    frame: false,
+    alwaysOnTop: true,
+    transparent: true,
+    show: true,
+    resizable: false
+  });
+  
+  splashWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'splash.html'),
+    protocol: 'file',
+    slashes: true
+  }));
+}
+
+app.on('ready', () => {
+  createMainWindow();
+  createSplashWindow();
+});
 
 // Get excrept from an in-assets txt (arg being the number of spaces)
 

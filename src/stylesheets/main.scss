@@ -72,6 +72,10 @@ textarea {
   stroke-linecap: round;
 }
 
+.cutupLogo {
+  width: $cutup-logo-width;
+  height: $cutup-logo-height;
+}
 
 ::-webkit-scrollbar {
   width: $scrollbar-width;
