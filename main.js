@@ -32,6 +32,7 @@ function createMainWindow() {
     setTimeout(() => {
       splashWindow.destroy();
       mainWindow.show();
+      H.clearAssetsDir(assetsPath);
     }, 5000);
   })
 }
@@ -48,7 +49,7 @@ function createSplashWindow() {
     show: true,
     resizable: false
   });
-  
+
   splashWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'splash.html'),
     protocol: 'file',
@@ -63,12 +64,36 @@ app.on('ready', () => {
 
 // Get excrept from an in-assets txt (arg being the number of spaces)
 
+const assetsPath = path.join(__dirname, '/assets/');
+
 ipcMain.on('reachForExcrept', (event, arg) => {
-  fs.readFile('./src/assets/4280-0.txt', 'utf8', function (err, data) {
+  fs.readFile(assetsPath + arg + '.txt', 'utf8', function (err, data) {
     if (err) throw err;
     let ri = H.randomIndices(data);
     event.sender.send('excreptReached', data.substr(ri[0], ri[1] - ri[0]));
   });
+});
+
+// Upload the requested file
+
+ipcMain.on('openAndStoreFile', (event, arg) => {
+  dialog.showOpenDialog({
+    filters: [
+      { name: 'text', extensions: ['txt'] }
+    ]
+  }, (pathToFile) => {
+    if (pathToFile) {
+      let np = path.parse(pathToFile[0]);
+      fs.readFile(pathToFile[0], (err, data) => {
+        if (err) throw err;
+        let ast = assetsPath + np.base;
+        fs.writeFile(ast, data, 'utf-8', (err) => {
+          if (err) throw err;
+          event.sender.send('newVictimFileStored', np.name);
+        });
+      })
+    }
+  })
 });
 
 // Printing the cutup contents

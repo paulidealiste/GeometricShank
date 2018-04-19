@@ -1,6 +1,8 @@
+const electron = window.require("electron");
 import GeometricShankToolbar from './GeometricShankToolbar.component';
 import GeometricShankWindow from './GeometricShankWindow.component';
-const electron = window.require("electron");
+import * as UIkit from 'uikit';
+import * as R from 'ramda';
 
 export default ({
   template: `
@@ -23,7 +25,8 @@ export default ({
       </div>
     </nav>
     <div class="uk-flex">
-      <geometric-shank-toolbar 
+      <geometric-shank-toolbar v-bind:current-victim="currentVictim"
+        v-on:scv="setCurrentVictim" 
         v-on:nex="newRandomExcrept" 
         v-on:cal="clearAll" 
         v-on:ccu="clearCutupExcrept" 
@@ -38,9 +41,14 @@ export default ({
     </div>
   </div>
   `,
+  data: function() {
+    return {
+      currentVictim: 'Critique of pure reason'
+    }
+  },
   methods: {
     newRandomExcrept: function () {
-      this.$refs.gsw.newRandomExcrept();
+      this.$refs.gsw.newRandomExcrept(this.currentVictim);
     },
     cutTextGeometrically: function () {
       this.$refs.gsw.cutTextGeometrically();
@@ -62,6 +70,14 @@ export default ({
     },
     manageFreehandMode: function(freehand) {
       this.$refs.gsw.manageFreehandMode(freehand);
+    },
+    setCurrentVictim: function() {
+      electron.ipcRenderer.send('openAndStoreFile');
+      electron.ipcRenderer.on('newVictimFileStored', (event, arg) => {
+        this.currentVictim = arg;
+        let trans = this.$t("components.dialogs.currentvictimsucess") + '<br>' + arg;
+        let noty = R.once(UIkit.notification('<span uk-icon="icon: check"></span><span class="uk-text-small uk-position-center">' + trans + '</span>'));
+      });
     }
   },
   components: {

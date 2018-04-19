@@ -9,11 +9,14 @@ export default {
                 clearcutupcanvas: "Clear cutup canvas",
                 clearall: "Clear all",
                 showsegments: "Show segments",
-                printcutup: "Save current cutup"
+                printcutup: "Save current cutup",
+                setcurrentvictim: "Change current cutup victim",
+                currentvictim: "Current cutup victim"
             },
             dialogs: {
                 printsuccess: "Current cutup saved to ",
-                printfailure: "Curent cutup not saved"
+                printfailure: "Curent cutup not saved",
+                currentvictimsucess: "Current victim file set to: "
             }
         }
     }

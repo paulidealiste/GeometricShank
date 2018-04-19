@@ -1,9 +1,15 @@
 export default ({
   template: `
     <div class="uk-section-xsmall uk-section-secondary uk-flex uk-width-1-1">
-    <div class="uk-container">
+      <span class="uk-margin-left uk-position-absolute" v-bind:uk-tooltip="'title:' + $t('components.tooltips.currentvictim')">
+        {{ currentVictim }}
+      </span>
+      <div class="uk-container">
         <ul class="uk-iconnav">
-        <li v-on:click="nex" v-bind:uk-tooltip="'title:' + $t('components.tooltips.newrandomexcrept')">
+          <li v-on:click="scv" v-bind:uk-tooltip="'title:' + $t('components.tooltips.setcurrentvictim')">
+            <a uk-icon="icon: upload"></a>
+          </li>
+          <li v-on:click="nex" v-bind:uk-tooltip="'title:' + $t('components.tooltips.newrandomexcrept')">
             <a uk-icon="icon: comments"></a>
           </li>
           <li v-on:click="ctg" v-bind:uk-tooltip="'title:' + $t('components.tooltips.cuttextgeometrically')">
@@ -38,12 +44,16 @@ export default ({
       </div>
     </div>
   `,
+  props: ['currentVictim'],
   data: function() {
     return {
       freehand: false
     }
   },
   methods: {
+    scv: function() {
+      this.$emit('scv');
+    },
     nex: function () {
       this.$emit('nex');
     },

@@ -37,10 +37,10 @@ export default ({
     };
   },
   methods: {
-    newRandomExcrept: function () {
+    newRandomExcrept: function (currentVictim) {
       this.loading = true;
       this.cutupExcrept = '';
-      electron.ipcRenderer.send('reachForExcrept');
+      electron.ipcRenderer.send('reachForExcrept', currentVictim);
       electron.ipcRenderer.on('excreptReached', (event, arg) => {
         this.workingExcrept = arg.replace(/[\r\n]/g, ' ').replace(/ {2,}/g, ' ').trim();
         this.workingExcrept = this.trimLastWord(R.slice(0, this.charLimit, this.workingExcrept));
@@ -109,6 +109,6 @@ export default ({
     'geometric-shank-textarea': GeometricShangTextarea
   },
   mounted: function () {
-    this.charLimit = this.calculateCharLimit(this.$refs.wet, 15);
+    this.charLimit = this.calculateCharLimit(this.$refs.wet, 18);
   }
 })
