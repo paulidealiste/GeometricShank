@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="460" height="300" src="./splash.svg">
+  <img width="560" height="400" src="./splash.svg">
 </p>
 
 ## GEOMETRIC SHANK
@@ -16,9 +16,9 @@ This is primarilly a tool for artistic and clairvoyant explorations of one's own
 
 Paste-in or type any text, but be careful about inspirational flow, since the number of characters is limited to approx. one screen. Also, text can be sourced from a .txt file, or from an internal Public Domain copy of Immanuel Kant's Critique of pure reason. Random excrept can then be  obtained from it (popular victim file). After that, use the available tools to cut, path-cut or pick the words.
 
-<figure>
+<figure align='center'>
   <img src="./outward/geometricshank.png" alt="my alt text"/>
-  <figcaption>Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) resulst panel.</figcaption>
+  <figcaption style="font-size: 0.9em; color: grey;">Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) resulst panel.</figcaption>
 </figure>
 
 ### Project status and downloads
@@ -29,4 +29,4 @@ For now no installers are available. Only source code, which can be cloned and w
 
 ### Hopes and dreams
 
-Avoid all slang. Go back to words. Software in-line with creative process, with an emphasis on the burden of future events. Strong non-utilitarian message. Counterculture. 
+Avoid all slang. Go back to words. Software like a streamlined creative process, with an emphasis on the burden of future events. Strong non-utilitarian message. Counterculture. 
