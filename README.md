@@ -18,7 +18,7 @@ Paste-in or type any text, but be careful about inspirational flow, since the nu
 
 <p align='center'>
   <img src="./outward/geometricshank.png" alt="my alt text"/>
-  <p style="font-size: 0.9em; color: grey;">Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) resulst panel.</p>
+  <span style="font-size: 0.9em; color: grey;">Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) results panel.</span>
 </p>
 
 ### Project status and downloads
