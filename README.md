@@ -16,10 +16,10 @@ This is primarilly a tool for artistic and clairvoyant explorations of one's own
 
 Paste-in or type any text, but be careful about inspirational flow, since the number of characters is limited to approx. one screen. Also, text can be sourced from a .txt file, or from an internal Public Domain copy of Immanuel Kant's Critique of pure reason. Random excrept can then be  obtained from it (popular victim file). After that, use the available tools to cut, path-cut or pick the words.
 
-<figure align='center'>
+<p align='center'>
   <img src="./outward/geometricshank.png" alt="my alt text"/>
-  <figcaption style="font-size: 0.9em; color: grey;">Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) resulst panel.</figcaption>
-</figure>
+  <p style="font-size: 0.9em; color: grey;">Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) resulst panel.</p>
+</p>
 
 ### Project status and downloads
 
