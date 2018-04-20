@@ -109,6 +109,6 @@ export default ({
     'geometric-shank-textarea': GeometricShangTextarea
   },
   mounted: function () {
-    this.charLimit = this.calculateCharLimit(this.$refs.wet, 18);
+    this.charLimit = this.calculateCharLimit(this.$refs.wet, 20);
   }
 })
