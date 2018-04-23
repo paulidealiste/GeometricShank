@@ -149,7 +149,7 @@ GeometricShankGrid.prototype.renderGrid = function () {
         .append('div')
         .attr('class', 'gridCell uk-flex uk-flex-middle uk-flex-center uk-overlay-default uk-heading-hero')
         .attr('style', d => 'color: ' + d.color + '; width: ' + d.width + 'px; height: ' + d.height + 'px')
-        .html(d => '<span>' + d.cellID.toString() + '</span>');
+        .html(d => '<div style="background-color:'+ d.color +'; width: ' + d.width / 2 + 'px; height: ' + d.height / 2 + 'px"></div>');
 
     d3.select("body")
         .append('div')
