@@ -76,8 +76,8 @@ GeometricShankGrid.prototype.calculateRows = function (hl) {
 
 GeometricShankGrid.prototype.setBoundLines = function () {
     let _this = this;
-    if (this.selections.verticalBounds) this.selections.verticalBounds.remove();
-    if (this.selections.horizontalBounds) this.selections.horizontalBounds.remove();
+    d3.selectAll('line.verticalBounds').remove();
+    d3.selectAll('line.horizontalBounds').remove();
     let vbData = [{
         x1: 0,
         y1: 0,

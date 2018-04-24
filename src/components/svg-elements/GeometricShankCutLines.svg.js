@@ -33,13 +33,15 @@ export function GeometricShankCutLines(baseSelections, baseProperties, textLineS
         '#555152',
         '#2E2633'
     ];
+    this.dragBumper = { h: baseProperties.width * 0.2, v: baseProperties.height * 0.1 };
+    this.dragBounds = { top: 0 + this.dragBumper.v, left: 0 + this.dragBumper.h, bottom: baseProperties.height - this.dragBumper.h, right: baseProperties.width - this.dragBumper.v};
 }
 
 GeometricShankCutLines.prototype = Object.create(GeometricShankCutLines.prototype);
 GeometricShankCutLines.prototype.constructor = GeometricShankCutLines;
 
 GeometricShankCutLines.prototype.drawCrossCut = function (getAllWordsOnCutUpLines) {
-    var _this = this;
+    let _this = this;
     _this.callbacks.getAllWordsOnCutUpLines = getAllWordsOnCutUpLines;
     if (_this.selections.cutLinesContainer) _this.selections.cutLinesContainer.remove();
     _this.selections.cutLinesContainer = _this.selections.baseSelections.svg
@@ -53,7 +55,7 @@ GeometricShankCutLines.prototype.drawCrossCut = function (getAllWordsOnCutUpLine
 };
 
 GeometricShankCutLines.prototype.drawCutLines = function () {
-    var _this = this;
+    let _this = this;
     let cutLinesData = [{
         x1: _this.baseProperties.width / 2,
         y1: 0,
@@ -71,18 +73,58 @@ GeometricShankCutLines.prototype.drawCutLines = function () {
         .append('line')
         .style('stroke', '#FF0066')
         .style('stroke-width', 2)
+        .attr('class', 'cutLinesGrab')
         .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
         .attr('x1', function (d) { return d.x1 })
         .attr('y1', function (d) { return d.y1 })
         .attr('x2', function (d) { return d.x2 })
-        .attr('y2', function (d) { return d.y2 });
+        .attr('y2', function (d) { return d.y2 })
+        .call(d3.drag().on('start', function(d, i, k) {
+            return _this.cutLineDragStart(d, i, k);
+        }).on('drag', function(d, i, k) {
+            return _this.cutLineDragging(d, i, k);
+        }).on('end', function(d, i, k) {
+            return _this.cutLineDragEnd(d, i, k);
+        }));
     _this.selections.cutLines
         .merge(_this.selections.cutLines);
     _this.selections.cutLines.exit().remove();
 };
 
+GeometricShankCutLines.prototype.cutLineDragStart = function(d, i, k) {
+    let _this = this;
+}
+
+GeometricShankCutLines.prototype.cutLineDragging = function(d, i, k) {
+    let _this = this;
+    let line = d3.select(k[i]);
+    if (d.x1 == d.x2) {
+        if (d.x1 + d3.event.dx > _this.dragBounds.left && d.x1 + d3.event.dx < _this.dragBounds.right) {
+            d.x1 += d3.event.dx;
+            d.x2 = d.x1;
+        }
+    } else if (d.y1 == d.y2) {
+        if (d.y1 + d3.event.dy > _this.dragBounds.top && d.y1 + d3.event.dy < _this.dragBounds.bottom) {
+            d.y1 += d3.event.dy;
+            d.y2 = d.y1;
+        }
+    }
+    line
+        .attr('x1', d.x1)
+        .attr('y1', d.y1)
+        .attr('x2', d.x2)
+        .attr('y2', d.y2)
+}
+
+GeometricShankCutLines.prototype.cutLineDragEnd = function(d, i, k) {
+    let _this = this;
+    _this.calculateCutPositions();
+    _this.callbacks.getAllWordsOnCutUpLines(_this.cutPositions);
+    _this.displaySegmentNumbering();
+}
+
 GeometricShankCutLines.prototype.drawAuxCutLines = function () {
-    var _this = this;
+    let _this = this;
     _this.cutPositions.lines = [];
 
     _this.textLineSelections.textLinesContainer.selectAll('text').each(function (d, i, k) {
@@ -114,7 +156,7 @@ GeometricShankCutLines.prototype.drawAuxCutLines = function () {
 };
 
 GeometricShankCutLines.prototype.calculateCutPositions = function () {
-    var _this = this;
+    let _this = this;
     _this.cutPositions.horizontalCut = [];
     _this.cutPositions.verticalCut = [];
     _this.cutPositions.fieldNumber = _this.selections.cutLines.enter().nodes().length * _this.selections.cutLines.enter().nodes().length;

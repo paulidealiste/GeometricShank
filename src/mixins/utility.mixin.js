@@ -95,12 +95,23 @@ export default {
                 };
             }
         },
+        getLineOnHorizontalCut(lines, horizontalCut) {
+            let whl = R.findIndex((line) => {
+                return line.y1 > horizontalCut.y1;
+            }, lines);
+            return lines[whl];
+        },
         getAllWordsOnCutUpLines(cutPositions) {
             let words = [];
             for (let i = 0; i < cutPositions.lines.length; i++) {
                 let culine = cutPositions.lines[i];
                 let cuveccut = cutPositions.verticalCut[i];
                 words.push(this.getClickedWord(culine.lineText, cuveccut.x, culine.lineWidth).foundWord);
+            }
+            for (let i = 0; i < cutPositions.horizontalCut.length; i++) {
+                let cuhorcut = cutPositions.horizontalCut[i];
+                let horizline = this.getLineOnHorizontalCut(cutPositions.lines, cuhorcut);
+                words.push(horizline.lineText);
             }
             return words;
         },
