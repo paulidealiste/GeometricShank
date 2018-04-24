@@ -100,7 +100,6 @@ export default {
         },
         pasteCutUpSegments: function () {
             if (this.cutPositions) {
-                this.$emit('clearCutupExcrept');
                 let completeCutup = this.getCutUpSegments(this.cutPositions);
                 let completeCutupSegments = this.packCutupSegments(completeCutup, this.cutPositions.fieldColors);
                 let simpleHTML = this.elements.gsht.simpleHTMLSegments(completeCutupSegments);

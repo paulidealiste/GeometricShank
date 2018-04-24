@@ -56,8 +56,7 @@ export default ({
       }
     },
     addPackageString: function (packedHTML) {
-      this.clearCutupExcrept();
-      this.cutupExcrept = packedHTML;
+      this.cutupExcrept += packedHTML;
     },
     cutTextGeometrically: function () {
       this.$refs.gsc.cutTextGeometrically();
