@@ -33,9 +33,9 @@ module.exports = {
       {
         test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
         use: [
-          { 
-            loader: 'file-loader', 
-            options: { 
+          {
+            loader: 'file-loader',
+            options: {
               name: '[name].[ext]',
               publicPath: 'assets/fonts/'
             }
