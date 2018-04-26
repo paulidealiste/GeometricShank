@@ -23,6 +23,8 @@ Paste-in or type any text, but be careful about inspirational flow, since the nu
   <span style="font-size: 0.9em; color: grey;">Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) results panel.</span>
 </p>
 
+Draft of the User manual is available from this repository and is situated in the folder ./outward.
+
 ### Project status and downloads
 
 Open-source and forever free, this companion is in its infancy and hopefully will see many more iterations. If there is a contributing impulse to this DADA, William Burroughs and Brion Gysin hommage all forms and shapes of help are welcome.
