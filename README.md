@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="560" height="400" src="./splash.svg">
+  <img width="560" height="400" src="./static/splash.svg">
 </p>
 
 ## GEOMETRIC SHANK

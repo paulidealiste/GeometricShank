@@ -19,14 +19,31 @@ export default {
         getRandomID() {
             return Math.random().toString(36).substring(7);
         },
-        calculateCharLimit(HTMLElement, padder) {
-            let chw = this.getCharWidth();
-            let cw = HTMLElement.clientWidth - padder;
-            let CPL = Math.ceil(cw / chw);
-            let lh = this.getLineHeight(HTMLElement);
-            let ch = HTMLElement.clientHeight - padder;
-            let ANL = Math.ceil(ch / lh);
-            return Math.ceil(CPL * ANL);
+        trimToOverflow(HTMLElement, text, elpad) {
+            let classes = ['uk-text-small uk-overflow-auto'];
+            let div = document.createElement('div');
+            div.setAttribute('class', classes.join(' '));
+            let ch = HTMLElement.clientHeight - elpad + 'px'
+            let cw = HTMLElement.clientWidth - elpad + 'px';
+            div.setAttribute("style", "max-width: " + cw + "; max-height: " + ch + "");
+            document.body.appendChild(div);
+            let words = text.split(' ');
+            let trimmedText = '';
+            div.innerHTML = text;
+            if (div.scrollHeight > div.offsetHeight) {
+                div.innerHTML = '';
+                let cw = 0;
+                let lh = this.getLineHeight(div);
+                while (div.scrollHeight <= div.offsetHeight) {
+                    trimmedText = div.innerHTML + ' ' + words[cw];
+                    cw++;
+                    div.innerHTML = trimmedText;
+                }
+            } else {
+                trimmedText = text;
+            }
+            div.parentNode.removeChild(div);
+            return trimmedText;
         },
         shuffleArray(array) {
             var m = array.length, t, i;
@@ -67,10 +84,6 @@ export default {
             div.parentNode.removeChild(div);
             return wraped;
         },
-        trimLastWord(str) {
-            let lin = R.lastIndexOf(' ', str);
-            return lin != -1 ? R.slice(0, lin, str) : str;
-        },
         getClickedWord(line, mouseX, lineWidth) {
             let chw = lineWidth / line.length;
             let words = line.split(' ');
@@ -106,12 +119,16 @@ export default {
             for (let i = 0; i < cutPositions.lines.length; i++) {
                 let culine = cutPositions.lines[i];
                 let cuveccut = cutPositions.verticalCut[i];
-                words.push(this.getClickedWord(culine.lineText, cuveccut.x, culine.lineWidth).foundWord);
+                if (culine.lineText != null && culine.lineText != '') {
+                    words.push(this.getClickedWord(culine.lineText, cuveccut.x, culine.lineWidth).foundWord);
+                }
             }
             for (let i = 0; i < cutPositions.horizontalCut.length; i++) {
                 let cuhorcut = cutPositions.horizontalCut[i];
                 let horizline = this.getLineOnHorizontalCut(cutPositions.lines, cuhorcut);
-                words.push(horizline.lineText);
+                if (horizline != null) {
+                    words.push(horizline.lineText);
+                }
             }
             return words;
         },

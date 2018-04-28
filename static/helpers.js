@@ -25,7 +25,7 @@ const randomIndices = R.compose(
 );
 
 
-const clearAssetsDir = (dirPath) => {
+const clearstaticDir = (dirPath) => {
   try { var files = fs.readdirSync(dirPath); }
   catch (err) {
     throw err;
@@ -43,5 +43,5 @@ const clearAssetsDir = (dirPath) => {
 
 module.exports = {
   randomIndices: randomIndices,
-  clearAssetsDir: clearAssetsDir
+  clearstaticDir: clearstaticDir
 }

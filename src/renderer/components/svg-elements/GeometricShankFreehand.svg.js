@@ -104,12 +104,15 @@ GeometricShankFreehand.prototype.freehandDragging = function () {
 
 GeometricShankFreehand.prototype.freehandDragEnd = function () {
     let _this = this;
+    let filterSafe = R.reject(R.isNil);
     let freehandCutpositions = R.map((pathPoint) => {
         let line = R.clone(_this.textLines.find(pathPoint.x, pathPoint.y));
-        line.x = pathPoint.x;
-        return line;
+        if (line != null) {
+            line.x = pathPoint.x;
+            return line;
+        }
     }, _this.dragObject.path)
-    _this.callbacks.freehandDragEnd(freehandCutpositions);
+    _this.callbacks.freehandDragEnd(filterSafe(freehandCutpositions));
 };
 
 GeometricShankFreehand.prototype.switchOff = function () {

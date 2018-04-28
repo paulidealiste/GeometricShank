@@ -2,27 +2,35 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
-const H = require('./helpers.js');
+const H = require(__static + '/helpers.js');
 
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 let mainWindow, splashWindow;
 
 function createMainWindow() {
+
+  
   mainWindow = new BrowserWindow({
     width: 1366,
     height: 768,
     show: false
   })
-
+  
   mainWindow.setMenu(null)
+  if (isDevelopment) {
+    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+  } else {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file',
+      slashes: true
+    }))
+  }
 
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file',
-    slashes: true
-  }))
-
-  mainWindow.webContents.openDevTools()
+  if (isDevelopment) {
+    mainWindow.webContents.openDevTools()
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -32,7 +40,7 @@ function createMainWindow() {
     setTimeout(() => {
       splashWindow.destroy();
       mainWindow.show();
-      H.clearAssetsDir(assetsPath);
+      // H.clearstaticDir(staticPath);
     }, 5000);
   })
 }
@@ -51,7 +59,7 @@ function createSplashWindow() {
   });
 
   splashWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'splash.html'),
+    pathname: path.join(__static, 'splash.html'),
     protocol: 'file',
     slashes: true
   }));
@@ -62,12 +70,12 @@ app.on('ready', () => {
   createSplashWindow();
 });
 
-// Get excrept from an in-assets txt (arg being the number of spaces)
+// Get excrept from an in-static txt (arg being the number of spaces)
 
-const assetsPath = path.join(__dirname, '/assets/');
+const staticPath = __static + '/';
 
 ipcMain.on('reachForExcrept', (event, arg) => {
-  fs.readFile(assetsPath + arg + '.txt', 'utf8', function (err, data) {
+  fs.readFile(staticPath + arg + '.txt', 'utf8', function (err, data) {
     if (err) throw err;
     let ri = H.randomIndices(data);
     event.sender.send('excreptReached', data.substr(ri[0], ri[1] - ri[0]));
@@ -86,7 +94,7 @@ ipcMain.on('openAndStoreFile', (event, arg) => {
       let np = path.parse(pathToFile[0]);
       fs.readFile(pathToFile[0], (err, data) => {
         if (err) throw err;
-        let ast = assetsPath + np.base;
+        let ast = staticPath + np.base;
         fs.writeFile(ast, data, 'utf-8', (err) => {
           if (err) throw err;
           event.sender.send('newVictimFileStored', np.name);
