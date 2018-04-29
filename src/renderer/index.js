@@ -22,11 +22,3 @@ new Vue ({
   el: '#app',
   i18n
 });
-
-// Static path fix
-
-function getStaticPath() {
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const staticPath = isDevelopment ? __static : __dirname.replace(/app\.asar$/, 'static');
-  return staticPath;
-};

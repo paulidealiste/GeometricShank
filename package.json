@@ -45,6 +45,11 @@
       "productName": "Geometric Shank",
       "win": {
         "icon": "build/icon.ico"
+      },
+      "nsis": {
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true,
+        "runAfterFinish": false
       }
   }
 }
