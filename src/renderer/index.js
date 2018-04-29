@@ -1,4 +1,3 @@
-import (__static + '/fonts/Inconsolata.scss');
 import './stylesheets/main.scss';
 import i18n from './locales/index';
 import * as UIkit from 'uikit';
@@ -23,3 +22,11 @@ new Vue ({
   el: '#app',
   i18n
 });
+
+// Static path fix
+
+function getStaticPath() {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const staticPath = isDevelopment ? __static : __dirname.replace(/app\.asar$/, 'static');
+  return staticPath;
+};

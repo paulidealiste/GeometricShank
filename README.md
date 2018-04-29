@@ -33,4 +33,4 @@ For now no installers are available. Only source code, which can be cloned and w
 
 ### Hopes and dreams
 
-Avoid all slang. Go back to words. Software like a streamlined creative process, with an emphasis on the burden of future events. Strong non-utilitarian message. Counterculture. 
+Avoid all slang. Go back to words. Software like a streamlined creative process, with an emphasis on the burden of future events. Strong non-utilitarian message. Counterculture.

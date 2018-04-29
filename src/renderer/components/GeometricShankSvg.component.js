@@ -123,7 +123,9 @@ export default {
             .append('svg')
             .attr('width', '100%')
             .attr('height', '100%');
-        this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
+        this.$nextTick(function () {
+            this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
+        });
         this.properties.charWidth = this.getCharWidth();
         this.properties.lineHeight = this.getLineHeight(this.$el);
         this.properties.clipID = this.getRandomID();
