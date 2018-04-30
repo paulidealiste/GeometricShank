@@ -18,6 +18,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.6",
     "@fortawesome/vue-fontawesome": "^0.0.22",
     "d3": "^5.0.0",
+    "element-resize-detector": "^1.1.14",
     "ramda": "^0.25.0",
     "source-map-support": "^0.5.5",
     "uikit": "^3.0.0-beta.40",
@@ -41,15 +42,22 @@
     "webpack-merge": "^4.1.1"
   },
   "build": {
-      "appId": "156fb6a7-3fc5-425d-9962-51b67884b032",
-      "productName": "Geometric Shank",
-      "win": {
-        "icon": "build/icon.ico"
-      },
-      "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true,
-        "runAfterFinish": false
-      }
+    "appId": "156fb6a7-3fc5-425d-9962-51b67884b032",
+    "productName": "Geometric Shank",
+    "win": {
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "runAfterFinish": false
+    },
+    "linux": {
+      "target": "AppImage",
+      "executableName": "Geometric Shank",
+      "icon": "build/256x256.png",
+      "synopsis": "Cut-up technique for geometric explorations of text.",
+      "category": "Education"
+    }
   }
 }

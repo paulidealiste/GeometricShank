@@ -138,7 +138,7 @@ GeometricShankGrid.prototype.renderGrid = function () {
     d3.select('div.gridHolderCarry').remove();
     let t = d3.transition().duration(750).ease(d3.easeLinear);
 
-    let tlp = _this.baseSelections.cutLinesContainer.node().getBoundingClientRect();
+    let tlp = _this.baseSelections.baseSelections.svg.node().getBoundingClientRect();
 
     let gridHolder = d3.select(document.createElement('div'))
         .attr('class', 'uk-flex uk-flex-wrap uk-position-absolute')

@@ -96,6 +96,9 @@ export default ({
     userTyped: function (typed) {
       this.workingExcrept = typed.replace(/[\r\n]/g, ' ').replace(/ {2,}/g, ' ').trim();
       this.workingExcrept = this.trimToOverflow(this.$refs.wet, this.workingExcrept, 20).trim();
+    },
+    resizeListener() {
+      this.$refs.gsc.resizeListener();
     }
   },
   computed: {

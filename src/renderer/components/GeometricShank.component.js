@@ -3,6 +3,7 @@ import GeometricShankToolbar from './GeometricShankToolbar.component';
 import GeometricShankWindow from './GeometricShankWindow.component';
 import * as UIkit from 'uikit';
 import * as R from 'ramda';
+import * as elementResizeDetectorMaker from 'element-resize-detector';
 
 export default ({
   template: `
@@ -41,9 +42,11 @@ export default ({
     </div>
   </div>
   `,
-  data: function() {
+  data: function () {
     return {
-      currentVictim: 'Critique of pure reason'
+      currentVictim: 'Critique of pure reason',
+      erd: elementResizeDetectorMaker(),
+      erdActive: false
     }
   },
   methods: {
@@ -68,17 +71,29 @@ export default ({
     printCutup: function () {
       this.$refs.gsw.printCutup();
     },
-    manageFreehandMode: function(freehand) {
+    manageFreehandMode: function (freehand) {
       this.$refs.gsw.manageFreehandMode(freehand);
     },
-    setCurrentVictim: function() {
+    setCurrentVictim: function () {
       electron.ipcRenderer.send('openAndStoreFile');
       electron.ipcRenderer.on('newVictimFileStored', (event, arg) => {
         this.currentVictim = arg;
         let trans = this.$t("components.dialogs.currentvictimsucess") + '<br>' + arg;
         let noty = R.once(UIkit.notification('<span uk-icon="icon: check"></span><span class="uk-text-small uk-position-center">' + trans + '</span>'));
       });
+    },
+    resizeWindow: function () {
+      if (!this.erdActive) {
+        this.erdActive = true;
+      } else {
+        this.$nextTick(function () {
+          this.$refs.gsw.resizeListener();
+        });
+      }
     }
+  },
+  mounted: function () {
+    this.erd.listenTo(this.$el, this.resizeWindow);
   },
   components: {
     'geometric-shank-toolbar': GeometricShankToolbar,
