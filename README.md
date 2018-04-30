@@ -20,17 +20,33 @@ Paste-in or type any text, but be careful about inspirational flow, since the nu
   <img src="./outward/geometricshank.png" alt="my alt text"/>
 </p>
 <p align='center'>
-  <span style="font-size: 0.9em; color: grey;">Geometric shank one and only window. a) toolbar; b) inut text area; c) cut-up panel d) results panel.</span>
+  <i style="font-size: 0.9em; color: grey;">Geometric shank's one and only window. a) toolbar, b) inut text panel, c) cut-up panel, d) results panel.</i>
 </p>
 
-Draft of the User manual is available from this repository and is situated in the folder ./outward.
+Draft of the [User manual](outward/GSHUserManualV001.pdf) is available from this repository.
 
 ### Project status and downloads
 
 Open-source and forever free, this companion is in its infancy and hopefully will see many more iterations. If there is a contributing impulse to this DADA, William Burroughs and Brion Gysin hommage all forms and shapes of help are welcome.
 
-For now no installers are available. Only source code, which can be cloned and worked on with one speck of yarn install.
+For contributors and fellow DADA inspired developers this repo can be cloned and worked on with one speck of yarn install.
+```
+git clone https://github.com/paulidealiste/GeometricShank.git
+yarn
+```
+If you want to install Geometric Shank, an x86_64 builds are availble as .zip archive for [linux](outward/geometric-shank-0.0.1-x86_64.zip) and as a classic installer for [windows](outward/GeometricShankSetup0.0.1.exe).
 
 ### Hopes and dreams
 
 Avoid all slang. Go back to words. Software like a streamlined creative process, with an emphasis on the burden of future events. Strong non-utilitarian message. Counterculture.
+
+### Help
+
+Since this is an intial release, Geometric Shank is releatively (ahem. completely) in isolation. That is not the way its existence was intended. Its goal covers many areas so any help in the following would be invaluable:
+* Geometric Shank usage and the variaty (or lack thereof) of cut-up results.
+* Artistic touches, design and re-design.
+* New features from ideas to programming.
+* Bug hunt.
+* Distribution and an eventual website.    
+    
+In the spirit of the Beat generation, woud it be too much to fixate on a posibillty of a fanzine-type software, which embodies the content and the tool in one neat, freely shareable package?
