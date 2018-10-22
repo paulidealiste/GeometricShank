@@ -6,6 +6,10 @@ delete presetEnv.isPluginRequired;
 delete presetEnv.transformIncludesAndExcludes;
 
 module.exports = {
+  entry: {
+    vue: 'vue',
+    index: resolve('src/renderer/index.js')
+  },
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
@@ -20,6 +24,18 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        // vue-loader configuration
+        test: /\.vue%/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            css: ['vue-style-loader', {
+              loader: 'css-loader',
+            }]
+          }
+        }
+      },
       {
         test: /\.css$/i,
         use: [

@@ -6,7 +6,7 @@ import * as Icons from 'uikit/dist/js/uikit-icons.js'
 UIkit.use(Icons);
 
 import Vue from 'vue';
-import GeometricShank from './components/GeometricShank.component';
+import GeometricShank from './components/geometric-shank.component';
   
 // Component registration
 

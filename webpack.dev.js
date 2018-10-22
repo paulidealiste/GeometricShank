@@ -6,7 +6,7 @@ const { spawn } = require('child_process');
 
 module.exports = merge(common, {
   entry: {
-    app: './src/index.js',
+    app: './src/main/index.js',
     vendor: ['vue']
   },
   devtool: 'source-map',
