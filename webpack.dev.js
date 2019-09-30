@@ -9,6 +9,7 @@ module.exports = merge(common, {
     app: './src/main/index.js',
     vendor: ['vue']
   },
+  target: "electron-main",
   devtool: 'source-map',
   devServer: {
     after(app) {

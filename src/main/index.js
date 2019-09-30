@@ -14,8 +14,11 @@ function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1366,
     height: 768,
-    show: false
-  })
+    show: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
   
   mainWindow.setMenu(null)
   if (isDevelopment) {

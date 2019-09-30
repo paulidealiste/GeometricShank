@@ -34,7 +34,12 @@ For contributors and fellow DADA inspired developers this repo can be cloned and
 git clone https://github.com/paulidealiste/GeometricShank.git
 yarn
 ```
-If you want to install Geometric Shank, an x86_64 builds are availble as .zip archive for [linux](outward/geometric-shank-0.0.1-x86_64.zip) and as a classic installer for [windows](outward/GeometricShankSetup0.0.1.exe).
+If you want to be able to install Geometric Shank, it can be easily built for Windows or Linux. The build requires [yarn](https://yarnpkg.com/lang/en/) and [nodejs](https://nodejs.org/en/). Afterwards it can be build by a sequence of cli commands (when inside the project's dir):
+```cli
+yarn 
+yarn dstEWP
+```
+Firstly, yarn will install all dependencies, and then the dstEWP task will proceed with the build process, which will result with the executable distribution (with .exe in windows, or as ana AppImage in linux) in the /dist folder. From there it is all fun and games. 
 
 ### Hopes and dreams
 

@@ -151,24 +151,26 @@ export default {
       this.properties.width = svgClientRect.width - this.widthPadding;
     },
     resizeListener: function() {
-      this.selections.baseSvg.remove();
-      this.selections.baseSvg = d3
-        .select(this.$el)
-        .append("svg")
-        .attr("width", "100%")
-        .attr("height", "100%");
-      this.$nextTick(function() {
-        this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
-        this.render();
-      });
+      if (this.selections.baseSvg) {
+        this.selections.baseSvg.remove();
+        this.selections.baseSvg = d3
+          .select(this.$el)
+          .append("svg")
+          .attr("width", this.$el.clientWidth)
+          .attr("height", this.$el.clientHeight);
+        this.$nextTick(function() {
+          this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
+          this.render();
+        });
+      }
     }
   },
   mounted: function() {
     this.selections.baseSvg = d3
       .select(this.$el)
       .append("svg")
-      .attr("width", "100%")
-      .attr("height", "100%");
+      .attr("width", this.$el.clientWidth)
+      .attr("height", this.$el.clientHeight);
     this.$nextTick(function() {
       this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
     });
