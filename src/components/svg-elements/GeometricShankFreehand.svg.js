@@ -1,5 +1,5 @@
-import * as d3 from 'd3';
 import * as R from 'ramda';
+import { easeLinear, select, line, quadtree, curveBasis, transition, drag } from 'd3';
 
 export function GeometricShankFreehand(baseSelections, baseProperties, freehandDragEnd) {
     this.selections = {
@@ -12,8 +12,8 @@ export function GeometricShankFreehand(baseSelections, baseProperties, freehandD
     }
     this.baseProperties = baseProperties;
     this.textLines = null;
-    this.freehandCurveGenerator = d3.line()
-        .curve(d3.curveBasis)
+    this.freehandCurveGenerator = line()
+        .curve(curveBasis)
         .x(function (d) { return d.x })
         .y(function (d) { return d.y });
     this.freehandDragBehaviourElement = null;
@@ -25,7 +25,7 @@ export function GeometricShankFreehand(baseSelections, baseProperties, freehandD
     this.dragObject = {
         path: null
     };
-    this.transition = d3.transition().duration(350).ease(d3.easeLinear);
+    this.transition = transition().duration(350).ease(easeLinear);
 }
 
 GeometricShankFreehand.prototype = Object.create(GeometricShankFreehand.prototype);
@@ -39,23 +39,23 @@ GeometricShankFreehand.prototype.switchOn = function (textLineSelections) {
         .append('g')
         .attr('class', 'activeFreehandContainer');
     _this.freehandDragBehaviourElement = _this.selections.baseSelections.svg
-        .call(d3.drag().on('start', function () {
-            return _this.freehandDragStart();
-        }).on('drag', function () {
-            return _this.freehandDragging();
-        }).on('end', function () {
-            return _this.freehandDragEnd();
+        .call(drag().on('start', (event, d) => {
+            return _this.freehandDragStart(event, d);
+        }).on('drag', (event, d) => {
+            return _this.freehandDragging(event, d);
+        }).on('end', function (event, d) {
+            return _this.freehandDragEnd(event, d);
         }));
 };
 
 GeometricShankFreehand.prototype.createTextLines = function (textLineSelections) {
     let _this = this;
-    _this.textLines = d3.quadtree()
+    _this.textLines = quadtree()
         .x(function (d) { return d.x })
         .y(function (d) { return d.y });
     if (textLineSelections) {
         textLineSelections.textLinesContainer.selectAll('text').each(function (d, i, k) {
-            let cutext = d3.select(k[i]);
+            let cutext = select(k[i]);
             let lineDef = {
                 x: 0,
                 y: parseFloat(cutext.attr('y')),
@@ -67,23 +67,23 @@ GeometricShankFreehand.prototype.createTextLines = function (textLineSelections)
     }
 };
 
-GeometricShankFreehand.prototype.freehandDragStart = function () {
+GeometricShankFreehand.prototype.freehandDragStart = function(event, d) {
     let _this = this;
-    _this.dragObject.path = [d3.event.subject];
+    _this.dragObject.path = [event.subject];
     if (_this.selections.activeFreehand) _this.clear();
     _this.selections.activeFreehand = _this.selections.activeFreehandContainer
         .append('path')
         .datum(_this.dragObject.path)
         .attr('class', 'activeFreehand')
         .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')');
-    _this.dragObject.x0 = d3.event.x;
-    _this.dragObject.y0 = d3.event.y;
+    _this.dragObject.x0 = event.x;
+    _this.dragObject.y0 = event.y;
 };
 
-GeometricShankFreehand.prototype.freehandDragging = function () {
+GeometricShankFreehand.prototype.freehandDragging = function(event, d) {
     let _this = this;
-    _this.dragObject.x1 = d3.event.x;
-    _this.dragObject.y1 = d3.event.y;
+    _this.dragObject.x1 = event.x;
+    _this.dragObject.y1 = event.y;
     let dx = _this.dragObject.x1 - _this.dragObject.x0;
     let dy = _this.dragObject.y1 - _this.dragObject.y0;
     if (dx * dx + dy * dy > 100) {
@@ -102,7 +102,7 @@ GeometricShankFreehand.prototype.freehandDragging = function () {
     _this.selections.activeFreehand.attr('d', _this.freehandCurveGenerator);
 };
 
-GeometricShankFreehand.prototype.freehandDragEnd = function () {
+GeometricShankFreehand.prototype.freehandDragEnd = function(event, d) {
     let _this = this;
     let filterSafe = R.reject(R.isNil);
     let freehandCutpositions = R.map((pathPoint) => {
@@ -123,10 +123,11 @@ GeometricShankFreehand.prototype.switchOff = function () {
 
 GeometricShankFreehand.prototype.clear = function () {
     let _this = this;
+    const trs = transition().duration(350).ease(easeLinear);
     if (_this.selections.activeFreehand) {
         _this.selections.activeFreehand
             .attr('opacity', 1)
-            .transition(_this.transition)
+            .transition(trs)
             .attr('opacity', 0)
             .remove();
     }

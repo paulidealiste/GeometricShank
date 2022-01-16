@@ -25,7 +25,7 @@ Paste-in or type any text, but be careful about inspirational flow, since the nu
 
 Draft of the [User manual](outward/GSHUserManualV001.pdf) is available from this repository.
 
-### Project status and downloads
+### Project status and downloads :radioactive:
 
 Open-source and forever free, this companion is in its infancy and hopefully will see many more iterations. If there is a contributing impulse to this DADA, William Burroughs and Brion Gysin hommage all forms and shapes of help are welcome.
 
@@ -33,13 +33,14 @@ For contributors and fellow DADA inspired developers this repo can be cloned and
 ```
 git clone https://github.com/paulidealiste/GeometricShank.git
 yarn
+
+yarn dev #in one terminal window
+yarn electron #in another terminal window after dev finishes
+
 ```
-If you want to be able to install Geometric Shank, it can be easily built for Windows or Linux. The build requires [yarn](https://yarnpkg.com/lang/en/) and [nodejs](https://nodejs.org/en/). Afterwards it can be build by a sequence of cli commands (when inside the project's dir):
-```cli
-yarn 
-yarn dstEWP
-```
-Firstly, yarn will install all dependencies, and then the dstEWP task will proceed with the build process, which will result with the executable distribution (with .exe in windows, or as ana AppImage in linux) in the /dist folder. From there it is all fun and games. 
+
+:warning:
+After the required packages update (*vue* and *vite* instead of *webpack*) build step for the installable release is still not working.
 
 ### Hopes and dreams
 

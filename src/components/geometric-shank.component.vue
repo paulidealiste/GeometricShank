@@ -36,19 +36,19 @@
 </template>
 
 <script>
-const electron = window.require("electron");
-import GeometricShankToolbar from "./geometric-shank-toolbar.component";
-import GeometricShankWindow from "./geometric-shank-window.component";
-import * as UIkit from "uikit";
-import * as R from "ramda";
-import * as elementResizeDetectorMaker from "element-resize-detector";
+import GeometricShankToolbar from "./geometric-shank-toolbar.component.vue";
+import GeometricShankWindow from "./geometric-shank-window.component.vue";
+import ErrorMixin from '../mixins/errors.mixin';
+import NotificationMixin from '../mixins/notifications.mixin';
 
 export default {
+  mixins: [ErrorMixin, NotificationMixin],
+  mounted() {
+    this.TrackMainErrors();
+  },
   data: function() {
     return {
-      currentVictim: "Critique of pure reason",
-      erd: elementResizeDetectorMaker(),
-      erdActive: false
+      currentVictim: "Critique of pure reason"
     };
   },
   methods: {
@@ -77,32 +77,19 @@ export default {
       this.$refs.gsw.manageFreehandMode(freehand);
     },
     setCurrentVictim: function() {
-      electron.ipcRenderer.send("openAndStoreFile");
-      electron.ipcRenderer.on("newVictimFileStored", (event, arg) => {
-        this.currentVictim = arg;
-        let trans =
-          this.$t("components.dialogs.currentvictimsucess") + "<br>" + arg;
-        let noty = R.once(
-          UIkit.notification(
-            '<span uk-icon="icon: check"></span><span class="uk-text-small uk-position-center">' +
-              trans +
-              "</span>"
-          )
-        );
+      window.electron.openAndStoreFile();
+      window.electron.newVictimFileStored((data) => {
+        this.currentVictim = data;
+        const message = this.$t("components.dialogs.currentvictimsucess") + "<br>" + data;
+        this.PlainOkNotify(message);
       });
     },
     resizeWindow: function() {
-      if (!this.erdActive) {
-        this.erdActive = true;
-      } else {
-        this.$nextTick(function() {
-          this.$refs.gsw.resizeListener();
-        });
-      }
+      this.$refs.gsw.resizeListener();
     }
   },
   mounted: function() {
-    this.erd.listenTo(this.$el, this.resizeWindow);
+    window.addEventListener('resize', this.resizeWindow);
   },
   components: {
     "geometric-shank-toolbar": GeometricShankToolbar,

@@ -1,5 +1,5 @@
-import * as d3 from 'd3';
 import * as R from 'ramda';
+import { drag, select } from 'd3';
 import { GeometricShankGrid } from './GeometricShankGrid.svg';
 
 export function GeometricShankCutLines(baseSelections, baseProperties, textLineSelections) {
@@ -34,7 +34,7 @@ export function GeometricShankCutLines(baseSelections, baseProperties, textLineS
         '#2E2633'
     ];
     this.dragBumper = { h: baseProperties.width * 0.2, v: baseProperties.height * 0.1 };
-    this.dragBounds = { top: 0 + this.dragBumper.v, left: 0 + this.dragBumper.h, bottom: baseProperties.height - this.dragBumper.h, right: baseProperties.width - this.dragBumper.v};
+    this.dragBounds = { top: 0 + this.dragBumper.v, left: 0 + this.dragBumper.h, bottom: baseProperties.height - this.dragBumper.h, right: baseProperties.width - this.dragBumper.v };
 }
 
 GeometricShankCutLines.prototype = Object.create(GeometricShankCutLines.prototype);
@@ -79,11 +79,11 @@ GeometricShankCutLines.prototype.drawCutLines = function () {
         .attr('y1', function (d) { return d.y1 })
         .attr('x2', function (d) { return d.x2 })
         .attr('y2', function (d) { return d.y2 })
-        .call(d3.drag().on('start', function(d, i, k) {
+        .call(drag().on('start', function (d, i, k) {
             return _this.cutLineDragStart(d, i, k);
-        }).on('drag', function(d, i, k) {
+        }).on('drag', function (d, i, k) {
             return _this.cutLineDragging(d, i, k);
-        }).on('end', function(d, i, k) {
+        }).on('end', function (d, i, k) {
             return _this.cutLineDragEnd(d, i, k);
         }));
     _this.selections.cutLines
@@ -91,21 +91,21 @@ GeometricShankCutLines.prototype.drawCutLines = function () {
     _this.selections.cutLines.exit().remove();
 };
 
-GeometricShankCutLines.prototype.cutLineDragStart = function(d, i, k) {
+GeometricShankCutLines.prototype.cutLineDragStart = function (d, i, k) {
     let _this = this;
 }
 
-GeometricShankCutLines.prototype.cutLineDragging = function(d, i, k) {
+GeometricShankCutLines.prototype.cutLineDragging = function (d, i, k) {
     let _this = this;
-    let line = d3.select(k[i]);
+    let line = select(k[i]);
     if (d.x1 == d.x2) {
-        if (d.x1 + d3.event.dx > _this.dragBounds.left && d.x1 + d3.event.dx < _this.dragBounds.right) {
-            d.x1 += d3.event.dx;
+        if (d.x1 + event.dx > _this.dragBounds.left && d.x1 + event.dx < _this.dragBounds.right) {
+            d.x1 += event.dx;
             d.x2 = d.x1;
         }
     } else if (d.y1 == d.y2) {
-        if (d.y1 + d3.event.dy > _this.dragBounds.top && d.y1 + d3.event.dy < _this.dragBounds.bottom) {
-            d.y1 += d3.event.dy;
+        if (d.y1 + event.dy > _this.dragBounds.top && d.y1 + event.dy < _this.dragBounds.bottom) {
+            d.y1 += event.dy;
             d.y2 = d.y1;
         }
     }
@@ -116,7 +116,7 @@ GeometricShankCutLines.prototype.cutLineDragging = function(d, i, k) {
         .attr('y2', d.y2)
 }
 
-GeometricShankCutLines.prototype.cutLineDragEnd = function(d, i, k) {
+GeometricShankCutLines.prototype.cutLineDragEnd = function (d, i, k) {
     let _this = this;
     _this.calculateCutPositions();
     _this.callbacks.getAllWordsOnCutUpLines(_this.cutPositions);
@@ -128,7 +128,7 @@ GeometricShankCutLines.prototype.drawAuxCutLines = function () {
     _this.cutPositions.lines = [];
 
     _this.textLineSelections.textLinesContainer.selectAll('text').each(function (d, i, k) {
-        let cutext = d3.select(k[i]);
+        let cutext = select(k[i]);
         let lineDef = {
             x1: 0,
             y1: parseFloat(cutext.attr('y')),

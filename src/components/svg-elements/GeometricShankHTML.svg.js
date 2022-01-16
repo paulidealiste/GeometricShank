@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import { select } from 'd3';
 
 export function GeometricShankHTML() {
 };
@@ -17,7 +17,7 @@ GeometricShankHTML.prototype.simpleHTMLSegments = function (completeCutupSegment
 };
 
 GeometricShankHTML.prototype.packedHTMLSegments = function (linedCutupSegments) {
-    let packaged = d3.select(document.createElement('div'));
+    let packaged = select(document.createElement('div'));
     let htmlCutup = packaged.selectAll('span.segmentDiv').data(linedCutupSegments);
     htmlCutup
         .enter()

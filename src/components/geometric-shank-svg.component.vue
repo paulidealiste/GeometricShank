@@ -1,11 +1,12 @@
 <template>
-  <div class="uk-flex uk-position-relative uk-flex-column uk-width-1-1 uk-height-1-1 uk-overflow-auto uk-padding-small">
-  </div>
+  <div
+    class="uk-flex uk-position-relative uk-width-1-1 uk-height-1-1"
+  ></div>
 </template>
 
 <script>
 import UtilityMixin from "../mixins/utility.mixin";
-import * as d3 from "d3";
+import { select } from 'd3'
 import { GeometricShankCutLines } from "./svg-elements/GeometricShankCutLines.svg";
 import { GeometricShankText } from "./svg-elements/GeometricShankText.svg";
 import { GeometricShankHTML } from "./svg-elements/GeometricShankHTML.svg";
@@ -14,7 +15,7 @@ import { GeometricShankFreehand } from "./svg-elements/GeometricShankFreehand.sv
 export default {
   props: ["computedExcrept"],
   mixins: [UtilityMixin],
-  data: function() {
+  data: function () {
     return {
       wrapedExcrept: [],
       ctx: null,
@@ -37,12 +38,13 @@ export default {
         gsht: null,
         gsfh: null
       },
-      heightPadding: 30,
-      widthPadding: 0
+      heightPadding: 0,
+      widthPadding: 0,
+      initialized: false
     };
   },
   methods: {
-    render: function() {
+    render: function () {
       this.wrapedExcrept = this.computeTextWrap(
         this.computedExcrept,
         this.properties.width - 20,
@@ -70,10 +72,10 @@ export default {
         this.wordsOnFreehandPath
       );
     },
-    structure: function() {
+    structure: function () {
       if (this.selections.svg != null) {
         this.selections.svg.remove();
-        d3.select("div.gridHolderCarry").remove();
+        select("div.gridHolderCarry").remove();
       }
       this.selections.svg = this.selections.baseSvg.append("g");
       this.selections.svg
@@ -89,16 +91,16 @@ export default {
         .attr("width", this.properties.width)
         .attr("height", this.properties.height);
     },
-    getClicked: function(line, mouseX, lineWidth) {
+    getClicked: function (line, mouseX, lineWidth) {
       return this.getClickedWord(line, mouseX, lineWidth).foundWord;
     },
-    wordCharClicked: function(word) {
+    wordCharClicked: function (word) {
       this.$emit("sendCutupString", word);
     },
-    cutTextGeometrically: function() {
+    cutTextGeometrically: function () {
       this.elements.gsln.drawCrossCut(this.wordsOnCutUpLines);
     },
-    manageFreehandMode: function(freehand) {
+    manageFreehandMode: function (freehand) {
       if (freehand) {
         this.selections.svg.attr("class", "cutWordsCursor");
         this.elements.gstx.setCursor(true);
@@ -109,20 +111,20 @@ export default {
         this.elements.gsfh.switchOff();
       }
     },
-    wordsOnFreehandPath: function(freehandCutpositions) {
+    wordsOnFreehandPath: function (freehandCutpositions) {
       this.$emit(
         "sendCutupString",
         this.prepareAndSetFreehandCutup(freehandCutpositions).join(" ")
       );
     },
-    wordsOnCutUpLines: function(cutPositions) {
+    wordsOnCutUpLines: function (cutPositions) {
       this.cutPositions = cutPositions;
       this.$emit(
         "sendCutupString",
         this.getAllWordsOnCutUpLines(this.cutPositions).join(" ")
       );
     },
-    pasteCutUpSegments: function() {
+    pasteCutUpSegments: function () {
       if (this.cutPositions) {
         let completeCutup = this.getCutUpSegments(this.cutPositions);
         let completeCutupSegments = this.packCutupSegments(
@@ -143,40 +145,37 @@ export default {
         this.$emit("sendPackageString", packedHTML);
       }
     },
-    showSegments: function() {
+    showSegments: function () {
       this.elements.gsln.showSegments();
     },
-    setHW: function(svgClientRect) {
+    setHW: function (svgClientRect) {
       this.properties.height = svgClientRect.height - this.heightPadding;
       this.properties.width = svgClientRect.width - this.widthPadding;
     },
-    resizeListener: function() {
+    resizeListener: function () {
       if (this.selections.baseSvg) {
         this.selections.baseSvg.remove();
-        this.selections.baseSvg = d3
-          .select(this.$el)
+        this.selections.baseSvg = select(this.$el)
           .append("svg")
           .attr("width", this.$el.clientWidth)
           .attr("height", this.$el.clientHeight);
-        this.$nextTick(function() {
+        this.$nextTick(function () {
           this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
-          this.render();
         });
+        this.render();
       }
-    }
-  },
-  mounted: function() {
-    this.selections.baseSvg = d3
-      .select(this.$el)
-      .append("svg")
-      .attr("width", this.$el.clientWidth)
-      .attr("height", this.$el.clientHeight);
-    this.$nextTick(function() {
+    },
+    initialize: function() {
+      this.selections.baseSvg = select(this.$el)
+        .append("svg")
+        .attr("width", this.$el.clientWidth)
+        .attr("height", this.$el.clientHeight);
       this.setHW(this.selections.baseSvg.node().getBoundingClientRect());
-    });
-    this.properties.charWidth = this.getCharWidth();
-    this.properties.lineHeight = this.getLineHeight(this.$el);
-    this.properties.clipID = this.getRandomID();
+      this.properties.charWidth = this.getCharWidth();
+      this.properties.lineHeight = this.getLineHeight(this.$el);
+      this.properties.clipID = this.getRandomID();
+      this.initialized = true;
+    }
   }
 };
 </script>

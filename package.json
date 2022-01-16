@@ -1,48 +1,41 @@
 {
-  "name": "geometric-shank",
+  "name": "geometricshank",
   "version": "0.1.0",
-  "description": "Geometric cut-up method for subversive explorations",
   "main": "main.js",
-  "author": "Paulidealiste",
-  "license": "MIT",
-  "private": false,
   "scripts": {
-    "dev": "webpack-dev-server --inline --config=./webpack.dev.js",
-    "bld": "webpack --config=./webpack.prod.js",
-    "devEWP": "electron-webpack dev",
-    "bldEWP": "electron-webpack",
-    "dstEWP": "yarn bldEWP && electron-builder"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron": "electron .",
+    "release": "yarn build && electron-builder --publish=never"
   },
   "dependencies": {
-    "d3": "^5.7.0",
-    "element-resize-detector": "^1.1.14",
-    "ramda": "^0.26.1",
-    "source-map-support": "^0.5.5",
-    "uikit": "^3.0.0-rc.19",
-    "vue": "^2.5.17",
-    "vue-i18n": "^8.2.1"
+    "d3": "^7.3.0",
+    "element-resize-detector": "^1.2.4",
+    "ramda": "^0.27.1",
+    "sass": "^1.47.0",
+    "uikit": "^3.9.4",
+    "vue": "^3.2.25",
+    "vue-i18n": "^9.2.0-beta.26"
   },
   "devDependencies": {
-    "css-loader": "^3.2.0",
-    "electron": "^6.0.10",
-    "electron-builder": "^21.2.0",
-    "electron-webpack": "^2.3.1",
-    "eslint": "^6.5.0",
-    "file-loader": "^4.2.0",
-    "html-loader": "^0.5.5",
-    "node-sass": "^4.9.4",
-    "sass-loader": "^8.0.0",
-    "style-loader": "^1.0.0",
-    "uglifyjs-webpack-plugin": "^2.0.1",
-    "vue-loader": "^15.4.2",
-    "vue-template-compiler": "^2.5.17",
-    "vue-template-loader": "^1.0.0",
-    "webpack": "^4.22.0",
-    "webpack-merge": "^4.1.4"
+    "@vitejs/plugin-vue": "^2.0.0",
+    "dotenv": "^10.0.0",
+    "electron": "^16.0.6",
+    "electron-builder": "^22.14.5",
+    "vite": "^2.7.2"
   },
   "build": {
     "appId": "156fb6a7-3fc5-425d-9962-51b67884b032",
     "productName": "Geometric Shank",
+    "files": [
+      "dist/assets/*",
+      "dist/index.html",
+      "main/*",
+      "static/*",
+      "main.js",
+      "preload.js"
+    ],
     "win": {
       "icon": "build/icon.ico"
     },
@@ -56,7 +49,8 @@
       "executableName": "Geometric Shank",
       "icon": "build/256x256.png",
       "synopsis": "Cut-up technique for geometric explorations of text.",
-      "category": "Education"
+      "category": "Education",
+      "asar": true
     }
   }
 }

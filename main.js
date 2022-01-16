@@ -1,52 +1,48 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const url = require('url');
-const H = require('./helpers.js');
+const H = require('./main/helpers.js')
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+let isDevelopment = process.env.APP_MODE === 'development';
+try {
+  require('dotenv').config();
+} catch (error) {
+  isDevelopment = false;
+}
 
 let mainWindow, splashWindow;
 
 function createMainWindow() {
-
-  
   mainWindow = new BrowserWindow({
     width: 1366,
     height: 768,
     show: false,
     webPreferences: {
-      nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js')
     }
   });
   
   mainWindow.setMenu(null)
   if (isDevelopment) {
-    mainWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    mainWindow.loadURL(`http://${process.env.DEV_SERVER}:${process.env.DEV_PORT}`)
   } else {
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file',
-      slashes: true
-    }))
+    mainWindow.loadFile('dist/index.html');
   }
-
+  
   if (isDevelopment) {
-    mainWindow.webContents.openDevTools()
   }
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
-  })
+  });
 
-  mainWindow.once('ready-to-show', () => {
-    setTimeout(() => {
-      splashWindow.destroy();
-      mainWindow.maximize();
-      mainWindow.show();
-      // H.clearstaticDir(staticPath);
-    }, 5000);
-  })
+  setTimeout(() => {
+    splashWindow.destroy();
+    mainWindow.maximize();
+    mainWindow.show();
+  }, 5000);
+
 }
 
 // Splash screen controls
@@ -61,12 +57,7 @@ function createSplashWindow() {
     show: true,
     resizable: false
   });
-
-  splashWindow.loadURL(url.format({
-    pathname: path.join(getStaticPath(), 'splash.html'),
-    protocol: 'file',
-    slashes: true
-  }));
+  splashWindow.loadFile(path.join(getStaticPath(), 'splash.html'));
 }
 
 app.on('ready', () => {
@@ -79,9 +70,12 @@ app.on('ready', () => {
 ipcMain.on('reachForExcrept', (event, arg) => {
   let file = arg + '.txt';  
   fs.readFile(path.join(getStaticPath(), file), 'utf8', function (err, data) {
-    if (err) throw err;
+    if (err) {
+      event.sender.send('mainProcessError', err.message);
+      return;
+    }
     let ri = H.randomIndices(data);
-    event.sender.send('excreptReached', data.substr(ri[0], ri[1] - ri[0]));
+    event.sender.send('excreptReached', data.substring(ri[0], ri[1]));
   });
 });
 
@@ -92,18 +86,26 @@ ipcMain.on('openAndStoreFile', (event, arg) => {
     filters: [
       { name: 'text', extensions: ['txt'] }
     ]
-  }, (pathToFile) => {
-    if (pathToFile) {
-      let np = path.parse(pathToFile[0]);
-      fs.readFile(pathToFile[0], (err, data) => {
-        if (err) throw err;
+  }).then(result => {
+    if (result.filePaths != null && !result.canceled) {
+      let np = path.parse(result.filePaths[0]);
+      fs.readFile(result.filePaths[0], (err, data) => {
+        if (err) { 
+          event.sender.send('mainProcessError', err.message);
+          return;
+        }
         let ast = path.join(getStaticPath(), np.base);
         fs.writeFile(ast, data, 'utf-8', (err) => {
-          if (err) throw err;
+          if (err) {
+            event.sender.send('mainProcessError', err.message);
+            return;
+          }
           event.sender.send('newVictimFileStored', np.name);
-        });
+        })
       })
     }
+  }).catch(err => {
+    event.sender.send('mainProcessError', err.message);
   })
 });
 
@@ -114,9 +116,10 @@ ipcMain.on('printToto', (event, arg) => {
     filters: [
       { name: 'text', extensions: ['txt'] }
     ]
-  }, (fullPath) => {
-    if (fullPath) {
-      let saveBuf = fs.createWriteStream(fullPath, {
+  }).then(result => {
+    console.log(result)
+    if (result.filePath != null && !result.canceled) {
+      let saveBuf = fs.createWriteStream(result.filePath, {
         flags: 'a',
         encoding: 'utf8'
       });
@@ -126,10 +129,10 @@ ipcMain.on('printToto', (event, arg) => {
       }
       saveBuf.end();
       saveBuf.on('finish', () => {
-        event.sender.send('totoPrinted', fullPath);
+        event.sender.send('totoPrinted', result.filePath);
       });
     } else {
-      event.sender.send('totoNotPrinted');
+      event.sender.send('mainProcessError', 'totoNotPrinted');
     }
   });
 });
@@ -137,7 +140,7 @@ ipcMain.on('printToto', (event, arg) => {
 // Static path fix
 
 function getStaticPath() {
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const staticPath = isDevelopment ? __static : __dirname.replace(/app\.asar$/, 'static');
-    return staticPath;
+    const isDevelopment = process.env.APP_MODE === 'development';
+    const staticPath = isDevelopment ? 'static' : __dirname.replace(/app\.asar$/, 'static');
+    return 'static';
 };

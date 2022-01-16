@@ -1,5 +1,6 @@
 import * as R from 'ramda';
-import * as d3 from 'd3';
+import { select, selectAll, transition, easeLinear } from 'd3';
+
 
 export function GeometricShankGrid(baseSelections, baseProperties, fieldColors) {
     this.baseSelections = baseSelections;
@@ -76,8 +77,8 @@ GeometricShankGrid.prototype.calculateRows = function (hl) {
 
 GeometricShankGrid.prototype.setBoundLines = function () {
     let _this = this;
-    d3.selectAll('line.verticalBounds').remove();
-    d3.selectAll('line.horizontalBounds').remove();
+    selectAll('line.verticalBounds').remove();
+    selectAll('line.horizontalBounds').remove();
     let vbData = [{
         x1: 0,
         y1: 0,
@@ -135,12 +136,12 @@ GeometricShankGrid.prototype.setBoundLines = function () {
 
 GeometricShankGrid.prototype.renderGrid = function () {
     let _this = this;
-    d3.select('div.gridHolderCarry').remove();
-    let t = d3.transition().duration(750).ease(d3.easeLinear);
+    select('div.gridHolderCarry').remove();
+    let t = transition().duration(750).ease(easeLinear);
 
     let tlp = _this.baseSelections.baseSelections.svg.node().getBoundingClientRect();
 
-    let gridHolder = d3.select(document.createElement('div'))
+    let gridHolder = select(document.createElement('div'))
         .attr('class', 'uk-flex uk-flex-wrap uk-position-absolute')
         .attr('style', d => 'width: ' + _this.baseProperties.width + 'px;' + 'top: ' + tlp.top + 'px; left: ' + tlp.left + 'px;');
     let grid = gridHolder.selectAll('div.gridCell')
@@ -149,9 +150,9 @@ GeometricShankGrid.prototype.renderGrid = function () {
         .append('div')
         .attr('class', 'gridCell uk-flex uk-flex-middle uk-flex-center uk-overlay-default uk-heading-hero')
         .attr('style', d => 'color: ' + d.color + '; width: ' + d.width + 'px; height: ' + d.height + 'px')
-        .html(d => '<div style="background-color:'+ d.color +'; width: ' + d.width / 2 + 'px; height: ' + d.height / 2 + 'px"></div>');
+        .html(d => '<div style="background-color:' + d.color + '; width: ' + d.width / 2 + 'px; height: ' + d.height / 2 + 'px"></div>');
 
-    d3.select("body")
+    select("body")
         .append('div')
         .attr('class', 'gridHolderCarry')
         .html(gridHolder.node().outerHTML)
@@ -164,7 +165,7 @@ GeometricShankGrid.prototype.renderGrid = function () {
         .remove();
 };
 
-GeometricShankGrid.prototype.getCells = function() {
+GeometricShankGrid.prototype.getCells = function () {
     let _this = this;
     return _this.cells;
 };

@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import { select } from 'd3';
 
 export function GeometricShankText(baseSelections, baseProperties) {
     this.selections = {
@@ -40,8 +40,8 @@ GeometricShankText.prototype.renderTextLines = function (data) {
         })
         .attr('clip-path', 'url(#' + _this.baseProperties.clipID + ')')
         .text((d) => { return d })
-        .on('click', (d, i, k) => {
-            let word = _this.callbacks.getClickedWord(d, d3.mouse(k[i])[0], d3.select(k[i]).node().getBBox().width);
+        .on('click', (event, d) => {
+            let word = _this.callbacks.getClickedWord(d, event.layerX, select(event.target).node().getBBox().width);
             _this.callbacks.wordCharClicked(word);
         });
     _this.selections.textLines
